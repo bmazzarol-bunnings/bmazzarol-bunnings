@@ -8,7 +8,12 @@ on:
       path:
         type: string
       if-no-files-found:
-        type: string
+        required: true
+        type: choice
+        options:
+        - ignore
+        - warning
+        - error
 
 jobs:
   format-code:
