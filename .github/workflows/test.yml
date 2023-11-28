@@ -1,0 +1,24 @@
+name: Test upload wrapper
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        type: string
+      path:
+        type: string
+      if-no-files-found:
+        type: string
+
+jobs:
+  format-code:
+    runs-on: [ self-hosted, script ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: Bunnings-Technology-Delivery/GHA.API.Templates/.github/actions/upload-artifact@test/improve-upload-action
+        with:
+          name: ${{inputs.name}}
+          path: ${{inputs.path}}
+          if-no-files-found: ${{inputs.if-no-files-found}}
+          
