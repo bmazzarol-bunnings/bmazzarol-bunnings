@@ -11,6 +11,7 @@ Business asks and delivery work are tracked as [GitHub issues](https://github.co
 - [#2 — Agentic Engineering & Platform Tooling](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/2)
 - [#3 — Search & Discovery (Embedding Search + Location API)](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/3)
 - [#4 — AsyncAPI / Event Documentation Pipeline](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/4)
+- [#25 — Data Engineering Agentic Craft](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/25)
 
 ## Related Repos
 
