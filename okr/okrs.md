@@ -12,6 +12,7 @@ Ben is effectively the **product owner for DevX** in the platform team. Conseque
 
 * Work that improves DevX → the DevX bucket (map #2 / INTPLAT-375), even if it arrives framed as a different concern.
 * Other platform work (e.g. observability KAPs) is generally **owned by the wider platform team**; Ben's contribution is via DevX improvements and enabling work for his buckets. Not a direct delivery gap for him unless a specific item lands on his desk.
+* **G4 (AppSec)** is a **DevSec business outcome**, reached via the **Valkyrie farm** — the in-house agent farm the org is investing in. Ben + Rivet *support* the farm (map #26 / company Agentic Workboard); AppSec-flavoured asks route there, no separate bucket.
 
 ---
 
@@ -77,6 +78,6 @@ Key action points:
 | G1 Observability | Mostly platform-team owned (see role context). Ben's angle: INTPLAT-1770/1769, bunnings-agentic #60-63 (OTel → ELK) as enabling work |
 | G2 AI capability | Digital 2IC (#26); Agentic Eng & Platform Tooling (#2); AOT copilot-am (#1754); ConsoleAppFramework migration (#1761); bunnings-agentic harness |
 | G3 Everyday AI | Cross-cutting: Hermes usage, copilot skills, agent-assisted PRs across all repos |
-| G4 AppSec | dotnet.common CodeQL sweep (#1734-1739); CI security gates; vuln patching pipelines |
+| G4 AppSec | DevSec outcome via Valkyrie farm (see role context). Ben/Rivet support the farm; dotnet.common CodeQL sweep (#1734-1739) is one instance |
 
 Unmapped / unclear: item Cosmos migration (#116-119), loyalty pagination (#473-476), edp-dbt devx standard (#12282+), powerpass portal E2E (#352-355), plsql.common bulk (50 open) — needs Ben's read.
