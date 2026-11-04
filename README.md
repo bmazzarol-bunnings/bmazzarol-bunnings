@@ -14,6 +14,10 @@ Business asks and delivery work are tracked as [GitHub issues](https://github.co
 - [#25 — Data Engineering Agentic Craft](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/25)
 - [#26 — Digital 2IC (Hermes orchestrator + Hindsight memory + tmux worker control)](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/26)
 
+## Delivery Plans
+
+Each top-level bucket has a written plan in [plans/](plans/README.md) — the shared vision for what the stream is aiming for, versioned and evolving over time. The map issues hold the decision logs; the plans hold the *why*.
+
 ## OKRs
 
 FY2026-27 objectives from Workday, captured in [okr/okrs.md](okr/okrs.md). Used as the reference for triage criteria 3–4 (platform-vision fit, OKR alignment). Workday is bot-impermeable — the doc is refreshed manually when Ben re-exports.
