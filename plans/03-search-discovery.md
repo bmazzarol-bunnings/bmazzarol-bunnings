@@ -33,6 +33,9 @@ In:
 - Location API: suburb & postcode search via EDDH → Cosmos. Ben = epic
   owner/coordinator; implementation team-assigned. AU-first (Geoscape G-NAF
   settled); NZ source dataset still researching.
+- **Item as the semantic-capability test bed**: most item work bundles
+  around the aim of providing semantic capability to our domains. The item
+  Cosmos migration (GH item #116-119) sits in this scope of work.
 
 Out:
 - Coveo/Vertex vendor contracts or procurement.
@@ -51,3 +54,4 @@ Out:
 ## Evolution log
 
 - 2026-11-04 — Plan doc created from map #3 (bucket standardisation, issue #34).
+- 2026-11-04 — Walkthrough: item confirmed as the semantic-capability test bed; item Cosmos migration (GH #116-119) folded into this bucket's scope.

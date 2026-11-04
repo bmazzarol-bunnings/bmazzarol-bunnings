@@ -26,6 +26,10 @@ In:
 - Solace MCP in DevX (leading candidate: "MCP-ify empx")
 - MCP metrics (likely config-only on IOP MCP server; SDK already ships
   OTel-convention metrics)
+- **EDP/dbt DevX uplift** (GH edp-dbt #12282+): uplift and support the data
+  engineering team in their agentic journey. Work in progress — politics
+  prevent wholesale changes or movement there, so this is incremental
+  enablement, not a re-platform.
 
 Out:
 - Token brokering in FIDP (deferred follow-up)
@@ -42,3 +46,4 @@ Out:
 ## Evolution log
 
 - 2026-11-04 — Plan doc created from map #2 (bucket standardisation, issue #34).
+- 2026-11-04 — Walkthrough: EDP/dbt DevX uplift (GH edp-dbt #12282+) added to scope — incremental enablement of the data engineering team's agentic journey; politics block wholesale change.
