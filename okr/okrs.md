@@ -6,6 +6,13 @@ Last captured: 2026-11-04 (4 goals).
 These OKRs are the reference for triage criteria 3–4 (platform-vision fit, OKR alignment)
 when ranking incoming work without asking Ben each time.
 
+## Role context (2026-11-04, walkthrough)
+
+Ben is effectively the **product owner for DevX** in the platform team. Consequences for triage:
+
+* Work that improves DevX → the DevX bucket (map #2 / INTPLAT-375), even if it arrives framed as a different concern.
+* Other platform work (e.g. observability KAPs) is generally **owned by the wider platform team**; Ben's contribution is via DevX improvements and enabling work for his buckets. Not a direct delivery gap for him unless a specific item lands on his desk.
+
 ---
 
 ## Goal 1 — Observability in prod & preprod
@@ -67,7 +74,7 @@ Key action points:
 
 | Goal | Likely-aligned work (from GH inventory 2026-11-04) |
 |------|----------------------------------------------------|
-| G1 Observability | bunnings-agentic #60-63 (OTel logs/tracing → ELK, INTPLAT-1770); comms telemetry gaps; MTTR/automated-triage work |
+| G1 Observability | Mostly platform-team owned (see role context). Ben's angle: INTPLAT-1770/1769, bunnings-agentic #60-63 (OTel → ELK) as enabling work |
 | G2 AI capability | Digital 2IC (#26); Agentic Eng & Platform Tooling (#2); AOT copilot-am (#1754); ConsoleAppFramework migration (#1761); bunnings-agentic harness |
 | G3 Everyday AI | Cross-cutting: Hermes usage, copilot skills, agent-assisted PRs across all repos |
 | G4 AppSec | dotnet.common CodeQL sweep (#1734-1739); CI security gates; vuln patching pipelines |
