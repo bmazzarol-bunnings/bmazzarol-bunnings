@@ -80,4 +80,5 @@ Key action points:
 | G3 Everyday AI | Cross-cutting: Hermes usage, copilot skills, agent-assisted PRs across all repos |
 | G4 AppSec | DevSec outcome via Valkyrie farm (see role context). Ben/Rivet support the farm; dotnet.common CodeQL sweep (#1734-1739) is one instance |
 
-Unmapped / unclear: item Cosmos migration (#116-119), loyalty pagination (#473-476), edp-dbt devx standard (#12282+), powerpass portal E2E (#352-355), plsql.common bulk (50 open) — needs Ben's read.
+Unmapped / unclear: item Cosmos migration (#116-119), loyalty pagination (#473-476), edp-dbt devx standard (#12282+), powerpass portal E2E (#352-355) — needs Ben's read.
+Resolved 2026-11-04: plsql.common bulk (53 open) handed off to Samccull-Bunnings (reassigned + commented).
