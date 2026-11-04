@@ -1,6 +1,6 @@
 # CAF Sweep Map — dotnet.common
 
-Issue: [#1761](https://github.com/bmazzarol-bunnings/bmazzarol-bunnings/issues/1761)
+Issue: [#1761](https://github.com/Bunnings-Technology-Delivery/dotnet.common/issues/1761)
 
 This document maps every location in `dotnet.common` (scanned from `origin/main`) that references
 `Spectre.Console.Cli` — either via a `PackageReference` in a `.csproj`/`.props` file, or via
@@ -12,7 +12,7 @@ This document maps every location in `dotnet.common` (scanned from `origin/main`
 | File | Kind | Notes |
 |------|------|-------|
 | `src/dotnet/Directory.Packages.props` | Central package version | Pins `Spectre.Console.Cli` 1.0.0-alpha.0.16, `Spectre.Console` 0.57.2, `Spectre.Console.Cli.Testing` 1.0.0-alpha.0.16, `Spectre.Console.Testing` 0.57.2 |
-| `src/dotnet/Common.Tool.props` | Shared MSBuild props | Adds `PackageReference Spectre.Console.Cli` to every tool that imports it (all 7 released tools) |
+| `src/dotnet/Common.Tool.props` | Shared MSBuild props | Adds `PackageReference Spectre.Console.Cli` to every project that imports it (9 tool projects + 1 test project: ApigeeGenerator, Bagc, ChangeLogTool, CopilotArtifactManagementTool, EmpXTool, JsonSchemaTool, RoslynIndexerTool, TemplateEnhancementTool, TestReportingTool, and CopilotArtifactManagementTool.Tests) |
 | `src/dotnet/Components/Spectre/Bunnings.Common.Spectre/Bunnings.Common.Spectre.csproj` | Component library | Provides `ServiceCollectionTypeRegistrar`, `ServiceProviderTypeResolver`, `ConfiguratorExtensions` — the DI bridge for Spectre CLI |
 | `src/dotnet/Usecases/MonoRepoMigration/Bunnings.UseCase.MonoRepoMigrationTool/Bunnings.UseCase.MonoRepoMigrationTool.csproj` | Library (packable) | Direct `PackageReference Spectre.Console.Cli` (does not use Common.Tool.props) |
 
@@ -38,6 +38,7 @@ their test harness updated alongside the tools they cover.
 | 12 | `Usecases/MonoRepoMigration` | `mono-repo-migration` | 1 | Yes (1 file) | Light (1 file) | Low | ✅ Yes |
 | 13 | `Components/Spectre` | `Bunnings.Common.Spectre` | 0 (infra) | N/A | None | Med | ⚠️ Replace |
 | 14 | `Usecases/Bunnings.UseCase.Registration` | `InternalToolHost` infra | 0 (infra) | N/A | None | Med | ⚠️ Replace |
+| 15 | `Tools/TestReportingTool` | `test-reporting` | 0 | N/A | None | — | ❌ Non-target (inherits ref via Common.Tool.props but uses no Spectre.Console.Cli types) |
 
 ---
 
