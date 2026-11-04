@@ -1,0 +1,75 @@
+# OKRs — Ben Mazzarol (FY2026-27)
+
+Source: Workday "View Goal" exports (bot-impermeable — updated manually when Ben re-exports).
+Last captured: 2026-11-04 (4 goals).
+
+These OKRs are the reference for triage criteria 3–4 (platform-vision fit, OKR alignment)
+when ranking incoming work without asking Ben each time.
+
+---
+
+## Goal 1 — Observability in prod & preprod
+
+- **Title:** Observability is built into all production and preproduction environments
+- **Category:** Priority 1 — Simpler and Better (Public)
+- **Due:** 31/12/2026
+- **Set by:** Eric Chapman, 24/08/2026
+- **Status (Workday):** Not Started
+
+Key action points:
+1. **CMDB Completeness & Ownership** — end-to-end service mapping in the CMDB; 100% of CIs accurately logged with designated primary owners.
+2. **User Experience & Observability** — design and deploy UX monitoring dashboards across all critical platforms/applications; track real-time system performance and user impact.
+3. **Incident Recovery Optimization** — establish MTTR baseline for critical incidents; automated triage and recovery workflows; reduce critical-incident MTTR by 20% vs baseline.
+4. **Automated Testing & Validation** — continuous automated testing/validations across critical application pipelines; use observability data to identify, track, and remediate systemic exceptions.
+
+## Goal 2 — AI cost, velocity, world-class engineering capability
+
+- **Title:** Using AI responsibly, identify and execute on a plan to reduce AI costs, increase velocity and build a world class engineering capability in Bunnings at scale
+- **Category:** Priority 1 — Accelerated by Data and AI (Public)
+- **Due:** 30/04/2027
+- **Set by:** Eric Chapman, 24/08/2026
+- **Status (Workday):** Not Started
+
+Key action points:
+1. **Cost Optimization & Velocity** — AI implementation plan that reduces operational costs while measurably increasing delivery velocity; governance frameworks so all AI tools/models are leveraged responsibly and securely at scale.
+2. **Agentic Engineering Capability** — design and deploy an agentic engineering architecture automating complex software development and operational workflows; upskill and empower engineering teams to build, orchestrate, and maintain AI agents.
+3. **24/7 Automated Engineering Workforce** — collaborate cross-functionally to implement a continuous 24/7 engineering pipeline using cost-effective AI models; monitoring, guardrails, and handoff protocols for continuous output and reliability.
+
+## Goal 3 — Embedding AI in everyday work
+
+- **Title:** Embedding AI in everyday work and demonstrating through key productivity metrics
+- **Category:** Accelerated by Data and AI (Public)
+- **Due:** 30/06/2027
+- **Set by:** Richard Crane, 21/09/2026
+- **Status (Workday):** (not shown in export)
+
+Description:
+- Including software development as well as non-coding related tasks
+- Demonstrating reduction in unit effort for key tasks in the team
+
+## Goal 4 — AI-driven vulnerability management & appsec posture
+
+- **Title:** Leverage AI and agentic engineering capabilities to automate vulnerability management, accelerate patching velocity, and improve the overall application security posture across all engineering repositories
+- **Category:** Priority 1 — Accelerated by Data and AI (Public)
+- **Due:** 30/04/2027
+- **Set by:** Eric Chapman, 24/08/2026
+- **Status (Workday):** Not Started
+
+Key action points:
+1. **Critical Finding Remediation** — AI + automated agent workflows to triage, fix, and resolve critical AppSec findings within 30 days across all code repositories.
+2. **Production Security Guardrails** — continuous CI/CD security gates driven by agentic capability; no code with unresolved medium-or-higher vulnerabilities deploys to production.
+3. **Rapid Patch Automation** — automated detection and rapid-patching pipelines; critical vulnerabilities on critical assets remediated within 48 hours of discovery.
+4. **Overall Risk Reduction** — measure, track, and reduce the organization's unified risk score by 15% through proactive, AI-driven threat mitigation and automated security remediation.
+
+---
+
+## Mapping to delivery streams (DRAFT — confirm with Ben in walkthrough)
+
+| Goal | Likely-aligned work (from GH inventory 2026-11-04) |
+|------|----------------------------------------------------|
+| G1 Observability | bunnings-agentic #60-63 (OTel logs/tracing → ELK, INTPLAT-1770); comms telemetry gaps; MTTR/automated-triage work |
+| G2 AI capability | Digital 2IC (#26); Agentic Eng & Platform Tooling (#2); AOT copilot-am (#1754); ConsoleAppFramework migration (#1761); bunnings-agentic harness |
+| G3 Everyday AI | Cross-cutting: Hermes usage, copilot skills, agent-assisted PRs across all repos |
+| G4 AppSec | dotnet.common CodeQL sweep (#1734-1739); CI security gates; vuln patching pipelines |
+
+Unmapped / unclear: item Cosmos migration (#116-119), loyalty pagination (#473-476), edp-dbt devx standard (#12282+), powerpass portal E2E (#352-355), plsql.common bulk (50 open) — needs Ben's read.
