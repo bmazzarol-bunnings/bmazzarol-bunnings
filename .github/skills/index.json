@@ -1,0 +1,12 @@
+{
+  "skills": [
+    {
+      "name": "dispatch",
+      "description": "Dispatches workboard items to crewmates or subagents: readiness gate, claim protocol, worker launch, review-feedback loop."
+    },
+    {
+      "name": "supervise",
+      "description": "Handles heartbeat ticks and worker liveness: handback verification, stalled/crash/orphan recovery, boot recovery, merge-gate judgement."
+    }
+  ]
+}

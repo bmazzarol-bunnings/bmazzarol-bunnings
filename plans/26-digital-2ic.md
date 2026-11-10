@@ -50,3 +50,13 @@ Out:
 ## Evolution log
 
 - 2026-11-04 — Plan doc created from map #26 (bucket standardisation, issue #34).
+- 2026-11-10 — **Pivot to Copilot-CLI-native firstmate.** The Hermes/Hindsight/tmux-bridge
+  composition above is superseded: the 2IC becomes one all-day Copilot CLI session in this
+  repo (the "first mate"), composed only from approved Copilot primitives. Hybrid worker
+  model (subagents + tmux copilot crewmates), three ported cron jobs driven by a .NET wake
+  tool running as a process under this repo, built-in memory only, seven repo-level skills
+  (dispatch, supervise, bearings, decisions, afk, laptop-watch, stow), Rivet identity kept.
+  Telegram gateway tracked as in-repo .NET work (#49); personality port tracked as #50.
+  Decision log on map #26. The vision (one captain, one interface; scripts own mechanics,
+  agents own judgment; restart is a non-event) carries over unchanged — only the substrate
+  changes.
