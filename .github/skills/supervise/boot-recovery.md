@@ -5,14 +5,14 @@ with reality so the floor is honest again.
 
 ## Steps
 
-1. Ensure the `work` session exists: `tmux new-session -d -s work -n scratch`
-   (no-op if it does).
-2. List live windows: `tmux list-windows -t work`.
+1. Verify the herdr server is running: `herdr status`. If it is down, the 2IC's
+   own pane is dead too — Ben must re-attach (`herdr`); report and stop.
+2. List live agents: `herdr agent list`.
 3. Read `state/floor/*.json` — every dispatched item.
-4. For each floor entry, cross-check window + inflight + issue comments:
-   * Window alive + inflight fresh: WORKING — leave alone.
-   * Window alive + inflight stale: STALLED — nudge once.
-   * Window dead + no release: CRASHED — re-dispatch fresh (the session is likely
+4. For each floor entry, cross-check agent + inflight + issue comments:
+   * Agent alive + inflight fresh: WORKING — leave alone.
+   * Agent alive + inflight stale: STALLED — nudge once.
+   * Agent gone + no release: CRASHED — re-dispatch fresh (the session is likely
      lost; a fresh dispatch with the full task body is safer than a resume guess).
    * Release present: process the handback (handback.md), clear the floor entry.
 5. Find issues with a `[worker-claim]` but no matching floor entry: ORPHAN —

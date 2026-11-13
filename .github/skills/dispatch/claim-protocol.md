@@ -17,9 +17,9 @@ The note line belongs to the release marker only.
 1. `gh api repos/<owner>/<repo>/issues/<N>/comments --paginate` — read the last marker.
 2. No marker: clear to dispatch.
 3. Claim present:
-   * Window `worker-N` alive (`tmux list-windows -t work`) and inflight file fresh
+   * Agent `worker-N` live (`herdr agent list`) and inflight file fresh
      (< 10 min): live owner. Do not dispatch; report who owns it.
-   * Window dead or inflight stale: orphan. Run orphan recovery.
+   * Agent gone or inflight stale: orphan. Run orphan recovery.
 4. Release present: clear to dispatch. If Ben re-dispatches, a fresh claim supersedes.
 
 ## Orphan recovery
@@ -27,7 +27,8 @@ The note line belongs to the release marker only.
 A claim with no live worker means the worker died without releasing.
 
 1. Read `state/floor/worker-N.json` for the session_id (if present).
-2. Try resume: `copilot -r <session_id>` in a fresh window at the worktree path.
+2. Try resume: fresh pane at the worktree path,
+   `herdr agent start worker-N --kind pi --pane <id> -- --session <session_id>`.
    If the session has recent activity, let the worker finish what it started.
 3. Session gone or work lost: post a `[worker-release]` comment noting
    `ORPHAN RECOVERY`, delete the floor file, re-dispatch fresh.

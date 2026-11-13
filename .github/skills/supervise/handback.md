@@ -6,7 +6,8 @@ comment. You process it. Self-reported success is not verified success.
 ## Verification (before believing anything)
 
 1. **PR exists?** `gh pr view <url> --json state,url,headRefName,statusCheckRollup`.
-   For `done` with no PR: the worker lost the PR — read the pane, re-dispatch.
+   For `done` with no PR: the worker lost the PR — read the pane (`herdr agent
+   read worker-N`), re-dispatch.
 2. **CI green on the CURRENT head?** Compare the PR's `headRefOid` to the CI run's
    commit. Green on an old commit is not green.
 3. **Files present?** Spot-check the diff covers the acceptance criteria:
@@ -19,7 +20,8 @@ skill) with the specific failure as the relay.
 ## Processing a verified done
 
 1. Delete `state/inflight/<N>.json` and `state/floor/worker-N.json`.
-2. Confirm the window is dead (kill it if the worker forgot).
+2. Confirm the agent is gone (close the pane if the worker forgot: `herdr pane
+   close <pane-id>`).
 3. Move the card to In review (board status field or label).
 4. Report to Ben: PR URL, CI state, one-line summary of what changed, what was
    verified. This is the "ready for your merge" moment — do not merge.

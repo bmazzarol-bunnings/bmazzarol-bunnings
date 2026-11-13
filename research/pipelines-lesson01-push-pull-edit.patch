@@ -1,0 +1,46 @@
+diff --git a/docs/courses/pipelines/lessons/01-concepts.md b/docs/courses/pipelines/lessons/01-concepts.md
+index b2eae25a1..28e75aca6 100644
+--- a/docs/courses/pipelines/lessons/01-concepts.md
++++ b/docs/courses/pipelines/lessons/01-concepts.md
+@@ -30,17 +30,32 @@ A pipeline gives you three things that nested calls do not:
+   and other operators without changing the component code. The pipeline is the
+   composition point.
+ 
+-### Push vs pull
++### Pull-based execution
+ 
+-A pipeline is **push-based**: the producer pushes an item into the first stage, which
+-pushes into the next, and so on until the consumer. There is no back-pressure, no
+-consumer-driven pulling, and no buffering between stages. Each `Run` drives one item
+-through the entire chain synchronously (or asynchronously, per component).
++A pipeline is **pull-based**: the pipeline calls `Yield()` on the producer to get the
++next item, then drives it through the stages to the consumer. The producer controls
++*whether* it has work (by returning `noResult` or `complete`), but the pipeline controls
++*when* it asks.
+ 
+-This contrasts with reactive streams (e.g. `IAsyncEnumerable` with a scheduler) where
+-the consumer pulls items and back-pressure is negotiated. Pipelines deliberately trade
+-that flexibility for predictability: the execution order is always producer → stages →
+-consumer, one item at a time.
++This is the opposite of Rx Observables, which are **push-based**: the observable calls
++`OnNext` on subscribers as soon as a value is available, and the subscriber must be
++ready to receive it. In a pipeline, the producer sits idle until the pipeline asks for
++the next item.
++
++There is no back-pressure negotiation, no buffering between stages, and no scheduling —
++each `Run` pulls one item and drives it producer → stages → consumer.
++
++When a pipeline is composed into another, it can expose either face:
++
++* As an `IPullPipeline<TState, TOut>` — a parent pipeline *pulls* items from it
++  (it acts as a producer).
++* As an `IPushPipeline<TState, TIn>` — a parent pipeline *pushes* items into it
++  (it acts as a consumer).
++
++This is what makes pipelines composable: you can nest them in either direction.
++The `StandardPushPipelineRegistration<TState, TIn>` (the shape used by Minimal APIs and
++controllers) is just one host configuration — one input in, one result out, no producer —
++not a fundamental characteristic of the framework.
+ 
+ ### Where pipelines shine — and where they do not
+ 

@@ -29,7 +29,7 @@ CONSTRAINTS:
 
 ON BLOCKER:
 Write state/inflight/<N>.json {"issue": N, "status": "blocked", "step": "<where>", "note": "<why>", "ts": "<now>"},
-post [worker-release] with "BLOCKED: <reason>", kill your own window (tmux kill-window).
+post [worker-release] with "BLOCKED: <reason>", close your own pane (herdr pane close <pane-id>).
 ```
 
 Rules for writing it:

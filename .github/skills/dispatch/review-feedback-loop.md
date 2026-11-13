@@ -9,14 +9,15 @@ review feedback itself — not even one-liners.
    for the worker).
 2. Identify the worker: `state/floor/worker-N.json` → session_id. If the floor
    file is gone, find the session from the claim/release comments on the PR's issue.
-3. Resume the worker session in its window (if the window is dead, recreate it at
-   the worktree path):
+3. Ensure the worker's pane is alive. If dead, recreate it at the worktree path
+   with the saved session:
 
    ```bash
-   tmux send-keys -t worker-N "copilot -r <session_id>" Enter
+   herdr pane split --current --direction right --cwd <worktree> --no-focus
+   herdr agent start worker-N --kind pi --pane <id> -- --session <session_id>
    ```
 
-4. Paste a terse relay into the resumed session:
+4. Relay via `herdr agent prompt worker-N "..." --wait`:
 
    ```
    Ben reviewed the PR. His feedback, verbatim:

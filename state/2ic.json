@@ -1,0 +1,7 @@
+{
+  "session_id": "01a1d4b7-967b-7082-b299-16211cf64642",
+  "model": "aigateway/qwen-27b",
+  "cwd": "/home/bmazzarol/work/bmazzarol-bunnings",
+  "pinned_at": "2026-11-13",
+  "note": "2IC session of record. Boot: pi --continue in the herdr pane of this repo. Re-pin after any intentional session rotation."
+}

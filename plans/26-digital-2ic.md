@@ -42,10 +42,15 @@ Out:
 
 ## Current state
 
-- Phase 3 of the build-out. Memory (Hindsight + local llama.cpp embeddings on
-  :8090) live; tmux-bridge worker loop verified end-to-end; Telegram gateway
-  live. Workboard seeded with buckets + plans (issue #34).
-- Next: worker-management skill authoring; ongoing bucket categorisation.
+- Phase: herdr + pi migration (2026-11-13 decision). 2IC = one pinned pi
+  session (`state/2ic.json`) in a herdr pane in this repo, aigateway/qwen-27b.
+  Workers = pi sessions in herdr panes on git worktrees (herdr pi integration
+  v9 gives lifecycle state). WakeTool (.NET) is the single cron/events hub:
+  versioned task definitions (`tooling/WakeTool/tasks/*.md`) + `herdr agent
+  prompt` inject mode. Phone access = Telegram only (corp network, no inbound).
+- Migration card on the board: AGENTS.md floor rewrite, skill set, WakeTool
+  Herdr mode, cutover runbook below.
+- Hermes and Hindsight retired to reference-only at cutover.
 
 ## Evolution log
 
@@ -59,4 +64,30 @@ Out:
   Telegram gateway tracked as in-repo .NET work (#49); personality port tracked as #50.
   Decision log on map #26. The vision (one captain, one interface; scripts own mechanics,
   agents own judgment; restart is a non-event) carries over unchanged — only the substrate
+  changes.
+- 2026-11-13 — **Pivot to herdr + pi.** The copilot-offline/tmux floor is superseded.
+  Decisions (settled with Ben):
+  1. Workers: pi everywhere (crewmates and subagents), aigateway/qwen-27b default,
+     `.github/skills` honored in-repo; no offline-copilot shield needed — pi +
+     aigateway already outside org policy.
+  2. 2IC: the pinned pi session in a herdr pane (workspace in this repo);
+     boot = `pi --continue` in that pane; restart is a non-event.
+  3. Phone: Telegram only (#49 re-scoped, injection via `herdr agent prompt`);
+     `herdr --remote` dropped — corp network blocks phone SSH.
+  4. Memory: built-in pi (session store, compaction) + stow; Hindsight retired,
+     installed as reference only.
+  5. Board: My Workboard project unchanged.
+  6. Recurring work / events: WakeTool stays .NET (Ben's home language) and is
+     the single hub — jobs = schedule + monitor fingerprint + versioned task
+     definitions; no inbound webhooks possible, so polling + Telegram
+     long-poll are the only doors and both are covered.
+  Cutover runbook:
+  1. Ben: `herdr` — attach default session; workspace auto-created in this repo.
+  2. Ben: split a pane, run `pi --continue` there; verify AGENTS.md loaded.
+  3. 2IC (in-pane): verify herdr skill, `herdr agent list` works from the pane.
+  4. 2IC: stop Hermes gateway + cron (reference-only from now).
+  5. 2IC: start WakeTool with Herdr inject mode (after migration card ships).
+  6. Retire the pre-herdr pi session.
+  The vision (one captain, one interface; scripts own mechanics, agents own
+  judgment; restart is a non-event) carries over unchanged — only the substrate
   changes.

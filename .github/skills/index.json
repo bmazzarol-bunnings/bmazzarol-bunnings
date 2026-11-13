@@ -1,8 +1,32 @@
 {
   "skills": [
     {
+      "name": "afk",
+      "description": "Sets the away posture: escalation rules while Ben is away and the return contract."
+    },
+    {
+      "name": "bearings",
+      "description": "Produces a four-section status digest (workboard, fleet, decisions, health); file variant writes a dated report."
+    },
+    {
+      "name": "decisions",
+      "description": "Surfaces open captain decisions one at a time, in impact order."
+    },
+    {
       "name": "dispatch",
       "description": "Dispatches workboard items to crewmates or subagents: readiness gate, claim protocol, worker launch, review-feedback loop."
+    },
+    {
+      "name": "herdr",
+      "description": "Operates the herdr CLI over the local socket: workspaces, panes, agent lifecycle states, worktrees. Use from inside a herdr pane (HERDR_ENV=1)."
+    },
+    {
+      "name": "laptop-watch",
+      "description": "Interprets laptop health and maintenance monitor output; recommends, never acts; reports under six lines."
+    },
+    {
+      "name": "stow",
+      "description": "Persists durable knowledge into plans/ and research/ files and curates session checkpoints."
     },
     {
       "name": "supervise",
