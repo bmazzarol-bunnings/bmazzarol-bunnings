@@ -138,7 +138,7 @@ internal static class Program
             payload = text;
         }
 
-        var (exitCode, output) = await RunHerdr(payload, ct);
+        var (exitCode, output) = RunHerdr(payload);
         var ack = exitCode == 0 ? "injected to rivet" : $"herdr exited {exitCode}";
         if (!string.IsNullOrWhiteSpace(output))
         {
@@ -156,39 +156,19 @@ internal static class Program
         }
     }
 
-    private static async Task<(int ExitCode, string Output)> RunHerdr(string content, CancellationToken ct)
+    private static (int ExitCode, string Output) RunHerdr(string content)
     {
-        var psi = new ProcessStartInfo
+        // ArgumentList passes the content as one argv entry — no shell, no quoting.
+        var psi = new ProcessStartInfo("herdr", ["agent", "prompt", "rivet", content, "--wait", "--timeout", HerdrTimeoutMs.ToString()])
         {
-            FileName = "herdr",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
             UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
         };
-        psi.ArgumentList.Add("agent");
-        psi.ArgumentList.Add("prompt");
-        psi.ArgumentList.Add("rivet");
-        psi.ArgumentList.Add(content);
-        psi.ArgumentList.Add("--wait");
-        psi.ArgumentList.Add("--timeout");
-        psi.ArgumentList.Add(HerdrTimeoutMs.ToString());
-
-        using var p = new Process { StartInfo = psi };
-        p.Start();
-        var outTask = p.StandardOutput.ReadToEndAsync(ct);
-        var errTask = p.StandardError.ReadToEndAsync(ct);
-        try
-        {
-            await p.WaitForExitAsync(ct);
-        }
-        catch (OperationCanceledException)
-        {
-            try { p.Kill(entireProcessTree: true); } catch { /* already gone */ }
-            return (-1, "herdr timed out or cancelled");
-        }
-
-        var outText = (await outTask) + (await errTask);
-        return (p.ExitCode, outText.Trim());
+        // RunAndCaptureText drains stdout and stderr concurrently — no pipe-buffer deadlock.
+        var result = Process.RunAndCaptureText(psi, TimeSpan.FromMilliseconds(HerdrTimeoutMs + 10_000));
+        return (result.ExitStatus.ExitCode, (result.StandardOutput + result.StandardError).Trim());
     }
 
     // ---------------------------------------------------------------- OUT
