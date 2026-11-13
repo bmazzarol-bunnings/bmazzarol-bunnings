@@ -44,5 +44,9 @@ console only; message bodies are logged as a short prefix (≤40 chars).
 
 ## Files
 
-- `Program.cs` — all of it: config, Bot API client, IN/OUT loops.
+- `Program.cs` — entry point: config load, getMe check, loop lifecycle, console logging.
+- `Config.cs` — token / allowed-users / repo-root resolution.
+- `BotApi.cs` — minimal Telegram Bot API client (HttpClient only) + DTO records.
+- `Inbound.cs` — IN path: long-poll, alias expansion, herdr injection, ack.
+- `Outbound.cs` — OUT path: outbox polling, send, move to sent/.
 - `TelegramGateway.csproj` — .NET 11 console app, zero package references.
