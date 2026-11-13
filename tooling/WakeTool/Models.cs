@@ -1,6 +1,6 @@
 namespace WakeTool;
 
-public sealed record JobConfig(
+internal sealed record JobConfig(
     string Name,
     string Schedule,
     string MonitorCommand,
@@ -10,7 +10,7 @@ public sealed record JobConfig(
     string? InjectMode = null
 );
 
-public sealed record JobState(
+internal sealed record JobState(
     string Fingerprint,
     DateTime LastRunUtc,
     int ConsecutiveNoChange

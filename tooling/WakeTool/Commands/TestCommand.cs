@@ -4,9 +4,9 @@ using Spectre.Console.Cli;
 
 namespace WakeTool;
 
-public sealed class TestCommand(IAnsiConsole console) : AsyncCommand<TestCommand.Settings>
+internal sealed class TestCommand(IAnsiConsole console) : AsyncCommand<TestCommand.Settings>
 {
-    public sealed class Settings : CommandSettings
+    internal sealed class Settings : CommandSettings
     {
         [CommandOption("--command <CMD>")]
         [Description("Shell command to run and fingerprint.")]

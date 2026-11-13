@@ -1,18 +1,22 @@
 using Bunnings.Common.ScalingWorker.Contract;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace WakeTool;
 
-public sealed class WakeJobContext
+internal sealed class WakeJobContext
 {
     public required JobRunner Runner { get; init; }
-    public required List<JobConfig> Jobs { get; init; }
+    public required IReadOnlyList<JobConfig> Jobs { get; init; }
 }
 
-public static class WakeWorker
+internal static partial class WakeWorker
 {
+    [LoggerMessage(LogLevel.Error, "[job:{Name}] tick failed")]
+    private static partial void LogTickFailed(ILogger logger, Exception exception, string name);
+
     public static BackgroundWorkerOptions<WakeJobContext> BuildOptions(
-        List<JobConfig> jobs,
+        IReadOnlyList<JobConfig> jobs,
         JobRunner runner,
         ILoggerFactory loggerFactory)
     {
@@ -48,7 +52,7 @@ public static class WakeWorker
             }
             catch (Exception ex)
             {
-                ctx.Runner.Logger?.LogError(ex, "[job:{Name}] tick failed", job.Name);
+                LogTickFailed(ctx.Runner.Logger, ex, job.Name);
             }
         }
         await Task.CompletedTask;
@@ -56,13 +60,39 @@ public static class WakeWorker
     }
 }
 
-public sealed class JobRunner
+internal sealed partial class JobRunner
 {
+    private static readonly JsonSerializerOptions StateJsonOptions = new()
+    {
+        WriteIndented = true
+    };
+
+    [LoggerMessage(LogLevel.Debug, "[job:{Name}] no change (fp={Fp}, streak={N})")]
+    private static partial void LogNoChange(ILogger logger, string name, string fp, int n);
+
+    [LoggerMessage(LogLevel.Information, "[job:{Name}] changed ({OldFp} -> {NewFp}), injecting tick")]
+    private static partial void LogChanged(ILogger logger, string name, string? oldFp, string newFp);
+
+    [LoggerMessage(LogLevel.Error, "[job:{Name}] task file could not be loaded; tick skipped (retry next due)")]
+    private static partial void LogTaskLoadFailed(ILogger logger, string name);
+
+    [LoggerMessage(LogLevel.Information, "[job:{Name}] inject {Result}")]
+    private static partial void LogInject(ILogger logger, string name, string result);
+
+    [LoggerMessage(LogLevel.Warning, "[job:{Name}] invalid task name '{Task}'")]
+    private static partial void LogInvalidTask(ILogger logger, string name, string task);
+
+    [LoggerMessage(LogLevel.Warning, "[job:{Name}] task file missing: {Path}")]
+    private static partial void LogTaskFileMissing(ILogger logger, string name, string path);
+
+    [LoggerMessage(LogLevel.Warning, "[job:{Name}] unknown injectMode '{Mode}', using runner default")]
+    private static partial void LogUnknownMode(ILogger logger, string name, string mode);
+
     private readonly Dictionary<string, JobState> _states = new();
     private readonly InjectMode _mode;
     private readonly string _target;
 
-    public JobRunner(string stateDir, InjectMode mode, string target, ILogger? logger = null)
+    public JobRunner(string stateDir, InjectMode mode, string target, ILogger logger)
     {
         StateDir = stateDir;
         _mode = mode;
@@ -72,7 +102,7 @@ public sealed class JobRunner
     }
 
     public string StateDir { get; }
-    public ILogger? Logger { get; }
+    public ILogger Logger { get; }
 
     public bool Execute(JobConfig job)
     {
@@ -88,22 +118,36 @@ public sealed class JobRunner
         if (!changed)
         {
             SaveState(job.Name, new JobState(fingerprint, now, (state?.ConsecutiveNoChange ?? 0) + 1));
-            Logger?.LogDebug("[job:{Name}] no change (fp={Fp}, streak={N})", job.Name, fingerprint, state?.ConsecutiveNoChange);
+            LogNoChange(Logger, job.Name, fingerprint, state?.ConsecutiveNoChange ?? 0);
             return false;
         }
 
-        Logger?.LogInformation("[job:{Name}] changed ({Old} -> {New}), injecting tick", job.Name, state?.Fingerprint, fingerprint);
-        var prompt = ResolvePrompt(job);
+        LogChanged(Logger, job.Name, state?.Fingerprint, fingerprint);        var prompt = ResolvePrompt(job);
         if (prompt is null)
         {
-            Logger?.LogError("[job:{Name}] task file could not be loaded; tick skipped (retry next due)", job.Name);
+            LogTaskLoadFailed(Logger, job.Name);
             return false;
         }
         var mode = ResolveMode(job);
-        var ok = Injector.Send(prompt, mode, _target);
-        Logger?.LogInformation("[job:{Name}] inject {Result}", job.Name, ok ? "ok" : "FAILED");
+        bool ok;
+        bool skipped = false;
+        if (mode == InjectMode.Herdr)
+        {
+            // Input-safe path: never send into a busy prompt box.
+            var result = Injector.HerdrSendSafe(_target, prompt);
+            skipped = result is HerdrInjectResult.Skipped;
+            ok = result is HerdrInjectResult.Sent;
+        }
+        else
+        {
+            ok = Injector.Send(prompt, mode, _target);
+        }
+        LogInject(Logger, job.Name, ok ? "ok" : (skipped ? "SKIPPED" : "FAILED"));
 
-        SaveState(job.Name, new JobState(fingerprint, now, 0));
+        // Skipped injections were never sent — do not advance state, so the
+        // next tick retries. Every other outcome keeps the existing behavior.
+        if (!skipped)
+            SaveState(job.Name, new JobState(fingerprint, now, 0));
         return true;
     }
 
@@ -111,16 +155,18 @@ public sealed class JobRunner
     {
         if (string.IsNullOrWhiteSpace(job.Task))
             return job.TickPrompt;
-        if (job.Task.Contains('/') || job.Task.Contains('\\') || job.Task.Contains(".."))
+        if (job.Task.Contains('/', StringComparison.Ordinal)
+            || job.Task.Contains('\\', StringComparison.Ordinal)
+            || job.Task.Contains("..", StringComparison.Ordinal))
         {
-            Logger?.LogWarning("[job:{Name}] invalid task name '{T}'", job.Name, job.Task);
+            LogInvalidTask(Logger, job.Name, job.Task);
             return null;
         }
         var name = job.Task.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ? job.Task : job.Task + ".md";
         var path = Path.Combine(JobConfigStore.FindRepoRoot(), "tooling", "WakeTool", "tasks", name);
         if (!File.Exists(path))
         {
-            Logger?.LogWarning("[job:{Name}] task file missing: {Path}", job.Name, path);
+            LogTaskFileMissing(Logger, job.Name, path);
             return null;
         }
         return File.ReadAllText(path);
@@ -130,20 +176,19 @@ public sealed class JobRunner
     {
         if (string.IsNullOrWhiteSpace(job.InjectMode))
             return _mode;
-        switch (job.InjectMode.ToLowerInvariant())
+        switch (job.InjectMode.Trim().ToUpperInvariant())
         {
-            case "tmux":
+            case "TMUX":
                 return InjectMode.Tmux;
-            case "connect":
+            case "CONNECT":
                 return InjectMode.Connect;
-            case "file":
+            case "FILE":
                 return InjectMode.File;
-            case "herdr":
+            case "HERDR":
                 return InjectMode.Herdr;
-            default:
-                Logger?.LogWarning("[job:{Name}] unknown injectMode '{M}', using runner default", job.Name, job.InjectMode);
-                return _mode;
         }
+        LogUnknownMode(Logger, job.Name, job.InjectMode);
+        return _mode;
     }
 
     private JobState? LoadState(string name)
@@ -155,7 +200,7 @@ public sealed class JobRunner
             return null;
         try
         {
-            var s = System.Text.Json.JsonSerializer.Deserialize<JobState>(File.ReadAllText(path));
+            var s = JsonSerializer.Deserialize<JobState>(File.ReadAllText(path), StateJsonOptions);
             if (s is not null) _states[name] = s;
             return s;
         }
@@ -169,7 +214,6 @@ public sealed class JobRunner
     {
         _states[name] = state;
         var path = Path.Combine(StateDir, $"{name}.json");
-        File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(state,
-            new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllText(path, JsonSerializer.Serialize(state, StateJsonOptions));
     }
 }

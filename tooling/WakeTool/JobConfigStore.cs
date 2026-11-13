@@ -3,7 +3,7 @@ using Spectre.Console;
 
 namespace WakeTool;
 
-public sealed class JobConfigStore
+internal sealed class JobConfigStore
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -18,7 +18,7 @@ public sealed class JobConfigStore
         _path = Path.Combine(repoRoot, "tooling", "WakeTool", "jobs.json");
     }
 
-    public List<JobConfig> Load()
+    public IReadOnlyList<JobConfig> Load()
     {
         if (!File.Exists(_path))
             return new List<JobConfig>();

@@ -1,0 +1,9 @@
+[*.cs]
+# Console app: no synchronization context; ConfigureAwait is noise.
+dotnet_diagnostic.CA2007.severity = none
+# Monitor fingerprint and command-boundary catches are intentionally broad: a
+# failed monitor command must surface as a fingerprint, and command handlers
+# must stay alive across any failure.
+dotnet_diagnostic.CA1031.severity = none
+# JobConfig/JobState are materialized by the JSON deserializer, never new'd directly.
+dotnet_diagnostic.CA1812.severity = none
