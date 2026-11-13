@@ -29,7 +29,7 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
         var jobs = store.Load();
         if (jobs.Count == 0)
         {
-            console.MarkupLine("[red]No jobs configured.[/red] Create tooling/WakeTool/jobs.json first.");
+            console.WriteLine("No jobs configured. Create tooling/WakeTool/jobs.json first.");
             return 1;
         }
 
@@ -42,9 +42,9 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
         var options = WakeWorker.BuildOptions(jobs, runner, loggerFactory);
         await using var worker = new ScalingBackgroundWorkerCore<WakeJobContext>(options);
 
-        console.MarkupLine($"[green]Wake loop running[/green] — {jobs.Count} job(s), mode={mode}, target={settings.Target}");
-        console.MarkupLine($"[grey]State dir: {stateDir}[/grey]");
-        console.MarkupLine("[grey]Ctrl+C to stop.[/grey]");
+        console.WriteLine($"Wake loop running — {jobs.Count} job(s), mode={mode}, target={settings.Target}");
+        console.WriteLine($"State dir: {stateDir}");
+        console.WriteLine("Ctrl+C to stop.");
 
         await worker.StartAsync(cancellationToken);
         try
@@ -54,7 +54,7 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
         catch (OperationCanceledException) { }
 
         await worker.StopAsync();
-        console.MarkupLine("[yellow]Wake loop stopped.[/yellow]");
+        console.WriteLine("Wake loop stopped.");
         return 0;
     }
 
