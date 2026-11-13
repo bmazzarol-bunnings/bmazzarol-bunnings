@@ -1,7 +1,7 @@
 [
   {
     "name": "2ic-heartbeat",
-    "schedule": "*/5m",
+    "schedule": "*/5 * * * *",
     "monitorCommand": "cd /home/bmazzarol/work/bmazzarol-bunnings && gh pr list --json number,state,reviewDecision 2>/dev/null; for f in state/floor/worker-*.json; do [ -f \"$f\" ] && cat \"$f\"; done; for f in state/inflight/*.json; do [ -f \"$f\" ] && cat \"$f\"; done; herdr agent list 2>/dev/null || echo floor-down",
     "tickPrompt": "[HEARTBEAT] Fallback prompt (task file missing). Run the supervise skill tick; if nothing changed since last tick, reply [SILENT].",
     "task": "heartbeat",
@@ -9,7 +9,7 @@
   },
   {
     "name": "laptop-health",
-    "schedule": "30m",
+    "schedule": "*/30 * * * *",
     "monitorCommand": "df -h / | tail -1; free -m | head -2; uptime",
     "tickPrompt": "[LAPTOP-HEALTH] Fallback prompt (task file missing). Report disk, memory, load; if all healthy, reply [SILENT].",
     "task": "laptop-health",
@@ -17,7 +17,7 @@
   },
   {
     "name": "laptop-maintenance",
-    "schedule": "daily 09:00",
+    "schedule": "0 9 * * *",
     "monitorCommand": "date +%Y-%m-%d",
     "tickPrompt": "[LAPTOP-MAINTENANCE] Fallback prompt (task file missing). Report daily maintenance findings.",
     "task": "laptop-maintenance",

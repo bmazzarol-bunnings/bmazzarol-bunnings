@@ -1,29 +1,24 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using Cronos;
 
 namespace WakeTool;
 
 public static class Cron
 {
+    /// <summary>
+    /// Due when the next cron occurrence (UTC) strictly after lastRun is <= now.
+    /// A job with no recorded lastRun (DateTime.MinValue) is due immediately.
+    /// </summary>
     public static bool IsDue(JobConfig job, DateTime now, DateTime lastRun)
     {
-        if (job.Schedule.StartsWith("*/"))
-            return (now - lastRun).TotalMinutes >= ParseInterval(job.Schedule[2..]);
+        if (lastRun <= DateTime.MinValue)
+            return true;
 
-        if (job.Schedule.EndsWith('m') && !job.Schedule.Contains(':'))
-            return (now - lastRun).TotalMinutes >= int.Parse(job.Schedule.TrimEnd('m'));
-
-        if (job.Schedule.StartsWith("daily "))
-        {
-            var target = TimeSpan.Parse(job.Schedule[6..]);
-            return lastRun.Date < now.Date && now.TimeOfDay >= target;
-        }
-
-        return false;
+        var expr = CronExpression.Parse(job.Schedule);
+        return expr.GetNextOccurrence(lastRun) <= now;
     }
-
-    private static int ParseInterval(string s) => int.Parse(s.TrimEnd('m'));
 }
 
 public static class Monitor
