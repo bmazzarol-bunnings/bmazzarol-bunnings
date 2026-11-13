@@ -5,7 +5,7 @@ using Cronos;
 
 namespace WakeTool;
 
-public static class Cron
+internal static class Cron
 {
     /// <summary>
     /// Due when the next cron occurrence (UTC) strictly after lastRun is <= now.
@@ -21,7 +21,7 @@ public static class Cron
     }
 }
 
-public static class Monitor
+internal static class Monitor
 {
     public static string RunFingerprint(string command)
     {
@@ -49,7 +49,7 @@ public static class Monitor
     private static string Sha256_16(string input)
     {
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
-        return Convert.ToHexString(bytes)[..16].ToLowerInvariant();
+        return Convert.ToHexString(bytes)[..16];
     }
 
     private static string Truncate(string s, int max) => s.Length <= max ? s : s[..max];

@@ -6,9 +6,9 @@ using Spectre.Console.Cli;
 
 namespace WakeTool;
 
-public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.Settings>
+internal sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.Settings>
 {
-    public sealed class Settings : CommandSettings
+    internal sealed class Settings : CommandSettings
     {
         [CommandOption("--mode <MODE>")]
         [Description("Injection mode: tmux, connect, file, or herdr.")]
@@ -33,9 +33,9 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
             return 1;
         }
 
-        var mode = ParseMode(settings.Mode);
+        var mode = Injector.ParseMode(settings.Mode);
         var stateDir = settings.StateDir ?? Path.Combine(JobConfigStore.FindRepoRoot(), "tooling", "WakeTool", "state");
-        var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
+        using var loggerFactory = LoggerFactory.Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information));
         var logger = loggerFactory.CreateLogger("wake");
         var runner = new JobRunner(stateDir, mode, settings.Target, logger);
 
@@ -57,13 +57,4 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
         console.WriteLine("Wake loop stopped.");
         return 0;
     }
-
-    private static InjectMode ParseMode(string s) => s.ToLowerInvariant() switch
-    {
-        "tmux" => InjectMode.Tmux,
-        "connect" => InjectMode.Connect,
-        "file" => InjectMode.File,
-        "herdr" => InjectMode.Herdr,
-        _ => throw new ArgumentException($"Unknown mode '{s}'. Use tmux, connect, file, or herdr.")
-    };
 }
