@@ -93,11 +93,57 @@ public sealed class JobRunner
         }
 
         Logger?.LogInformation("[job:{Name}] changed ({Old} -> {New}), injecting tick", job.Name, state?.Fingerprint, fingerprint);
-        var ok = Injector.Send(job.TickPrompt, _mode, _target);
+        var prompt = ResolvePrompt(job);
+        if (prompt is null)
+        {
+            Logger?.LogError("[job:{Name}] task file could not be loaded; tick skipped (retry next due)", job.Name);
+            return false;
+        }
+        var mode = ResolveMode(job);
+        var ok = Injector.Send(prompt, mode, _target);
         Logger?.LogInformation("[job:{Name}] inject {Result}", job.Name, ok ? "ok" : "FAILED");
 
         SaveState(job.Name, new JobState(fingerprint, now, 0));
         return true;
+    }
+
+    private string? ResolvePrompt(JobConfig job)
+    {
+        if (string.IsNullOrWhiteSpace(job.Task))
+            return job.TickPrompt;
+        if (job.Task.Contains('/') || job.Task.Contains('\\') || job.Task.Contains(".."))
+        {
+            Logger?.LogWarning("[job:{Name}] invalid task name '{T}'", job.Name, job.Task);
+            return null;
+        }
+        var name = job.Task.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ? job.Task : job.Task + ".md";
+        var path = Path.Combine(JobConfigStore.FindRepoRoot(), "tooling", "WakeTool", "tasks", name);
+        if (!File.Exists(path))
+        {
+            Logger?.LogWarning("[job:{Name}] task file missing: {Path}", job.Name, path);
+            return null;
+        }
+        return File.ReadAllText(path);
+    }
+
+    private InjectMode ResolveMode(JobConfig job)
+    {
+        if (string.IsNullOrWhiteSpace(job.InjectMode))
+            return _mode;
+        switch (job.InjectMode.ToLowerInvariant())
+        {
+            case "tmux":
+                return InjectMode.Tmux;
+            case "connect":
+                return InjectMode.Connect;
+            case "file":
+                return InjectMode.File;
+            case "herdr":
+                return InjectMode.Herdr;
+            default:
+                Logger?.LogWarning("[job:{Name}] unknown injectMode '{M}', using runner default", job.Name, job.InjectMode);
+                return _mode;
+        }
     }
 
     private JobState? LoadState(string name)

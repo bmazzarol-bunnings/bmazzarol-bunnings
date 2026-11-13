@@ -5,6 +5,11 @@ namespace WakeTool;
 
 public sealed class JobConfigStore
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private readonly string _path;
 
     public JobConfigStore()
@@ -18,7 +23,7 @@ public sealed class JobConfigStore
         if (!File.Exists(_path))
             return new List<JobConfig>();
         var json = File.ReadAllText(_path);
-        return JsonSerializer.Deserialize<List<JobConfig>>(json) ?? new List<JobConfig>();
+        return JsonSerializer.Deserialize<List<JobConfig>>(json, JsonOptions) ?? new List<JobConfig>();
     }
 
     public static string FindRepoRoot()

@@ -5,7 +5,9 @@ public sealed record JobConfig(
     string Schedule,
     string MonitorCommand,
     string TickPrompt,
-    bool Enabled = true
+    bool Enabled = true,
+    string? Task = null,
+    string? InjectMode = null
 );
 
 public sealed record JobState(
