@@ -11,11 +11,11 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
     public sealed class Settings : CommandSettings
     {
         [CommandOption("--mode <MODE>")]
-        [Description("Injection mode: tmux, connect, or file.")]
+        [Description("Injection mode: tmux, connect, file, or herdr.")]
         public string Mode { get; init; } = "tmux";
 
         [CommandOption("--target <TARGET>")]
-        [Description("Injection target: tmux pane ID, session ID, or file path.")]
+        [Description("Injection target: tmux pane ID, session ID, file path, or herdr agent name.")]
         public string Target { get; init; } = "%0";
 
         [CommandOption("--state-dir <DIR>")]
@@ -63,6 +63,7 @@ public sealed class RunCommand(IAnsiConsole console) : AsyncCommand<RunCommand.S
         "tmux" => InjectMode.Tmux,
         "connect" => InjectMode.Connect,
         "file" => InjectMode.File,
-        _ => throw new ArgumentException($"Unknown mode '{s}'. Use tmux, connect, or file.")
+        "herdr" => InjectMode.Herdr,
+        _ => throw new ArgumentException($"Unknown mode '{s}'. Use tmux, connect, file, or herdr.")
     };
 }
