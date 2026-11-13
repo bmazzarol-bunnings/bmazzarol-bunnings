@@ -16,7 +16,7 @@ public sealed class JobsCommand(IAnsiConsole console) : AsyncCommand<JobsCommand
         var jobs = store.Load();
         if (jobs.Count == 0)
         {
-            console.MarkupLine("[yellow]No jobs configured.[/yellow]");
+            console.WriteLine("No jobs configured.");
             return 0;
         }
 
