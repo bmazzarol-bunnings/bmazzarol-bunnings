@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TelegramGateway;
 
@@ -92,9 +93,12 @@ internal sealed class TelegramApiException : Exception
 
 internal sealed record Me(long Id, string? Username);
 
-internal sealed record Update(long Id, Message? Message);
+// The JSON key is "update_id" — case-insensitive matching alone would not bind
+// it to a parameter named Id (it deserialized to 0), which is exactly why the
+// offset never advanced and messages were re-delivered (#62).
+internal sealed record Update([property: JsonPropertyName("update_id")] long UpdateId, Message? Message);
 
-internal sealed record Message(long? MessageId, string? Text, Chat? Chat);
+internal sealed record Message([property: JsonPropertyName("message_id")] long? MessageId, string? Text, Chat? Chat);
 
 internal sealed record Chat(long Id);
 

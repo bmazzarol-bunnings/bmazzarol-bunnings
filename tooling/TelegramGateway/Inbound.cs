@@ -17,16 +17,52 @@ internal static class Inbound
     {
         var taskNames = LoadTaskNames(cfg.TasksDir);
         Log.Write($"task aliases: {(taskNames.Count > 0 ? string.Join(", ", taskNames.OrderBy(n => n)) : "none")}");
+
+        // Offset is in-memory only (not persisted). On restart it re-arms at 0
+        // and the prime-drain below discards whatever backlog Telegram has
+        // retained (up to 24h), so stale messages are never re-injected. A
+        // genuinely missed update is not a correctness problem here: the next
+        // heartbeat tick re-delivers it. Persisting would only add a state file
+        // to keep in sync for no benefit.
         long offset = 0;
+        var primed = false;
 
         while (!ct.IsCancellationRequested)
         {
             try
             {
                 var updates = await api.GetUpdates(offset, LongPollSeconds);
+                var before = offset;
                 foreach (var u in updates)
                 {
-                    offset = Math.Max(offset, u.Id + 1);
+                    offset = Math.Max(offset, u.UpdateId + 1);
+                }
+
+                if (!primed)
+                {
+                    // First response after (re)start: skip the retained
+                    // backlog instead of processing it. Draining continues
+                    // until an empty response, covering backlogs > 100
+                    // updates.
+                    if (updates.Length == 0)
+                    {
+                        primed = true;
+                        Log.Write($"primed offset {offset} (no backlog)");
+                    }
+                    else
+                    {
+                        Log.Write($"priming: skipped {updates.Length} backlog update(s), offset {before} -> {offset}");
+                    }
+                    continue;
+                }
+
+                if (updates.Length > 0)
+                {
+                    Log.Write($"getUpdates: {updates.Length} update(s), offset {before} -> {offset}");
+                }
+
+                foreach (var u in updates)
+                {
                     var text = u.Message?.Text;
                     var chatId = u.Message?.Chat?.Id;
                     if (string.IsNullOrEmpty(text) || chatId is null)
