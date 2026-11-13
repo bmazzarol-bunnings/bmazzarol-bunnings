@@ -2,8 +2,9 @@
   {
     "name": "2ic-heartbeat",
     "schedule": "*/5m",
-    "monitorCommand": "cd /home/bmazzarol/work/bmazzarol-bunnings && gh pr list --json number,state,reviewDecision 2>/dev/null; for f in state/floor/worker-*.json; do [ -f \"$f\" ] && cat \"$f\"; done; for f in state/inflight/*.json; do [ -f \"$f\" ] && cat \"$f\"; done; tmux list-panes -t work -F '#{window_index}.#{pane_index} #{pane_current_command}' 2>/dev/null || echo 'floor-down'",
-    "tickPrompt": "[HEARTBEAT] Run the supervise skill tick. Check all workers on the floor, reconcile state files, and report any changes. If nothing changed since last tick, reply [SILENT].",
+    "monitorCommand": "cd /home/bmazzarol/work/bmazzarol-bunnings && gh pr list --json number,state,reviewDecision 2>/dev/null; for f in state/floor/worker-*.json; do [ -f \"$f\" ] && cat \"$f\"; done; for f in state/inflight/*.json; do [ -f \"$f\" ] && cat \"$f\"; done; herdr agent list 2>/dev/null || echo floor-down",
+    "tickPrompt": "[HEARTBEAT] Run the supervise skill tick. Check all workers on the floor, reconcile state files against `herdr agent list`, and report any changes. If nothing changed since last tick, reply [SILENT].",
+    "task": "heartbeat",
     "enabled": true
   },
   {
@@ -11,6 +12,7 @@
     "schedule": "30m",
     "monitorCommand": "df -h / | tail -1; free -m | head -2; uptime",
     "tickPrompt": "[LAPTOP-HEALTH] Run the laptop-watch skill health check. Report disk, memory, and load. If all healthy, reply [SILENT].",
+    "task": "laptop-health",
     "enabled": true
   },
   {
@@ -18,6 +20,7 @@
     "schedule": "daily 09:00",
     "monitorCommand": "date +%Y-%m-%d",
     "tickPrompt": "[LAPTOP-MAINTENANCE] Run the laptop-watch skill daily maintenance: check for OS updates, clean temp files, verify disk health. Report findings.",
+    "task": "laptop-maintenance",
     "enabled": true
   }
 ]
