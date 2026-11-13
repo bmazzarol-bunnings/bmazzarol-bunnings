@@ -13,7 +13,7 @@ internal static class Outbound
     {
         Directory.CreateDirectory(cfg.OutboxDir);
         Directory.CreateDirectory(cfg.SentDir);
-        long captain = cfg.AllowedUsers.First();
+        long captain = cfg.AllowedUsers[0];
 
         while (!ct.IsCancellationRequested)
         {

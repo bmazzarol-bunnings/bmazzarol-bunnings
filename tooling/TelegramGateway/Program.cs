@@ -4,7 +4,7 @@ internal static class Program
 {
     private static CancellationTokenSource _cts = new();
 
-    private static int Main()
+    private static async Task<int> Main()
     {
         Console.CancelKeyPress += (_, e) =>
         {
@@ -19,10 +19,10 @@ internal static class Program
             return 1;
         }
 
-        var api = new BotApi(cfg.Token);
+        using var api = new BotApi(cfg.Token);
         try
         {
-            var me = api.GetMe();
+            var me = await api.GetMe();
             Log.Write($"getMe ok: @<{me.Username}> id={me.Id}");
         }
         catch (TelegramApiException ex) when (ex.ErrorCode == 401)
@@ -34,14 +34,14 @@ internal static class Program
         Log.Write($"allowed users: {string.Join(", ", cfg.AllowedUsers)}");
         Log.Write($"outbox: {cfg.OutboxDir}");
 
-        var inbound = Task.Run(() => Inbound.Loop(api, cfg, _cts.Token));
-        var outbound = Task.Run(() => Outbound.Loop(api, cfg, _cts.Token));
+        var inbound = Inbound.Loop(api, cfg, _cts.Token);
+        var outbound = Outbound.Loop(api, cfg, _cts.Token);
 
         try
         {
-            Task.WaitAll(inbound, outbound);
+            await Task.WhenAll(inbound, outbound);
         }
-        catch (AggregateException)
+        catch (Exception)
         {
             // A loop throwing after cancel is fine; a loop throwing before
             // cancel is logged by the loop itself and we exit non-zero.

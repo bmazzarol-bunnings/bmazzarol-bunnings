@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -5,8 +6,8 @@ using System.Text.Json;
 
 namespace TelegramGateway;
 
-/// <summary>Minimal Telegram Bot API client over HttpClient — no external packages.</summary>
-internal sealed class BotApi(string token)
+/// <summary>Minimal Telegram Bot API client over HttpClient — no external packages, fully async.</summary>
+internal sealed class BotApi(string token) : IDisposable
 {
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
@@ -20,54 +21,71 @@ internal sealed class BotApi(string token)
         Timeout = TimeSpan.FromSeconds(40),
     };
 
-    public Me GetMe() => JsonSerializer.Deserialize<Me>(Http("getMe").Result!.Value.GetRawText(), JsonOpts)!;
-
-    public Update[] GetUpdates(long offset, int timeoutSeconds)
+    public async Task<Me> GetMe()
     {
-        var result = Http($"getUpdates?offset={offset}&timeout={timeoutSeconds}").Result;
-        return result is null ? Array.Empty<Update>() : JsonSerializer.Deserialize<Update[]>(result.Value.GetRawText(), JsonOpts)!;
+        await using var stream = await SendAsync("getMe", null);
+        var env = await JsonSerializer.DeserializeAsync<Envelope<Me>>(stream, JsonOpts);
+        return env?.Result ?? throw new TelegramApiException(HttpStatusCode.OK, 0, "getMe returned no result");
     }
 
-    public Task SendMessage(long chatId, string text)
+    public async Task<Update[]> GetUpdates(long offset, int timeoutSeconds)
+    {
+        await using var stream = await SendAsync($"getUpdates?offset={offset}&timeout={timeoutSeconds}", null);
+        var env = await JsonSerializer.DeserializeAsync<Envelope<Update[]>>(stream, JsonOpts);
+        return env?.Result ?? Array.Empty<Update>();
+    }
+
+    public async Task SendMessage(long chatId, string text)
     {
         var payload = JsonSerializer.Serialize(new { chat_id = chatId, text });
+        // SendAsync disposes the content in a finally; no using here.
         var content = new StringContent(payload, Encoding.UTF8, "application/json");
-        return HttpAsync("sendMessage", content);
+        await using var _ = await SendAsync("sendMessage", content);
     }
 
-    private TelegramResponse Http(string path) => HttpAsync(path, null).GetAwaiter().GetResult();
-
-    private Task<TelegramResponse> HttpAsync(string path, HttpContent? body)
+    private async Task<Stream> SendAsync(string path, HttpContent? body)
     {
-        return Task.Run(async () =>
+        try
         {
-            try
+            using var req = new HttpRequestMessage(body is null ? HttpMethod.Get : HttpMethod.Post, path)
             {
-                var req = new HttpRequestMessage(body is null ? HttpMethod.Get : HttpMethod.Post, path)
-                {
-                    Content = body,
-                };
-                using var resp = await _http.SendAsync(req);
+                Content = body,
+            };
+            var resp = await _http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead);
+            if (!resp.IsSuccessStatusCode)
+            {
                 var raw = await resp.Content.ReadAsStringAsync();
                 var doc = JsonSerializer.Deserialize<TelegramResponse>(raw, JsonOpts);
-                if (doc is null || !doc.Ok)
-                {
-                    throw new TelegramApiException(resp.StatusCode, doc?.ErrorCode ?? -1, doc?.Description ?? raw);
-                }
-                return doc;
+                throw new TelegramApiException(resp.StatusCode, doc?.ErrorCode ?? -1, doc?.Description ?? raw);
             }
-            finally
-            {
-                body?.Dispose();
-            }
-        });
+            return await resp.Content.ReadAsStreamAsync();
+        }
+        finally
+        {
+            body?.Dispose();
+        }
     }
+
+    public void Dispose() => _http.Dispose();
 }
 
-internal sealed class TelegramApiException(HttpStatusCode status, int errorCode, string description)
-    : Exception($"Telegram API error {(int)status} (code {errorCode}): {description}")
+internal sealed class TelegramApiException : Exception
 {
-    public int ErrorCode { get; } = errorCode;
+    public TelegramApiException() : this(HttpStatusCode.OK, 0, "unknown error", null) { }
+
+    public TelegramApiException(string message) : this(HttpStatusCode.OK, 0, message, null) { }
+
+    public TelegramApiException(string message, Exception innerException) : this(HttpStatusCode.OK, 0, message, innerException) { }
+
+    public TelegramApiException(HttpStatusCode status, int errorCode, string description) : this(status, errorCode, description, null) { }
+
+    private TelegramApiException(HttpStatusCode status, int errorCode, string description, Exception? inner)
+        : base($"Telegram API error {(int)status} (code {errorCode}): {description}", inner)
+    {
+        ErrorCode = errorCode;
+    }
+
+    public int ErrorCode { get; }
 }
 
 // Bot API DTOs (only the fields we read).
@@ -81,3 +99,6 @@ internal sealed record Message(long? MessageId, string? Text, Chat? Chat);
 internal sealed record Chat(long Id);
 
 internal sealed record TelegramResponse(bool Ok, JsonElement? Result, int? ErrorCode, string? Description);
+
+/// <summary>Telegram responses wrap payloads in {"ok":true,"result":...}.</summary>
+internal sealed record Envelope<T>(T? Result);

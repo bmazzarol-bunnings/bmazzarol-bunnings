@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace TelegramGateway;
 
 internal sealed class Config
@@ -37,7 +39,7 @@ internal sealed class Config
 
         var users = usersRaw
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(s => long.Parse(s))
+            .Select(s => long.Parse(s, CultureInfo.InvariantCulture))
             .ToList();
         if (users.Count == 0)
         {

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 
 namespace TelegramGateway;
 
@@ -22,7 +23,7 @@ internal static class Inbound
         {
             try
             {
-                var updates = api.GetUpdates(offset, LongPollSeconds);
+                var updates = await api.GetUpdates(offset, LongPollSeconds);
                 foreach (var u in updates)
                 {
                     offset = Math.Max(offset, u.Id + 1);
@@ -91,7 +92,7 @@ internal static class Inbound
     private static (int ExitCode, string Output) RunHerdr(string content)
     {
         // ArgumentList passes the content as one argv entry — no shell, no quoting.
-        var psi = new ProcessStartInfo("herdr", ["agent", "prompt", "rivet", content, "--wait", "--timeout", HerdrTimeoutMs.ToString()])
+        var psi = new ProcessStartInfo("herdr", ["agent", "prompt", "rivet", content, "--wait", "--timeout", HerdrTimeoutMs.ToString(CultureInfo.InvariantCulture)])
         {
             UseShellExecute = false,
             CreateNoWindow = true,
