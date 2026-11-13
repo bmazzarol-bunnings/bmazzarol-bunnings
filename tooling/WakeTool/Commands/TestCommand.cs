@@ -24,7 +24,7 @@ public sealed class TestCommand(IAnsiConsole console) : AsyncCommand<TestCommand
         }
         catch (Exception ex)
         {
-            console.MarkupLine($"[red]Error: {ex}[/red]");
+            console.WriteLine($"Error: {ex}");
             return 1;
         }
     }
