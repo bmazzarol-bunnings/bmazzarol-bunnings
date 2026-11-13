@@ -32,22 +32,18 @@ public static class Monitor
     {
         try
         {
-            var psi = new ProcessStartInfo
+            var psi = new ProcessStartInfo("/bin/bash", ["-c", command])
             {
-                FileName = "/bin/bash",
-                Arguments = $"-c {ShellQuote(command)}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
-            using var p = Process.Start(psi)!;
-            string stdout = p.StandardOutput.ReadToEnd();
-            string stderr = p.StandardError.ReadToEnd();
-            p.WaitForExit(30_000);
-            if (p.ExitCode != 0)
-                return $"ERR:{p.ExitCode}:{Truncate(stderr, 200)}";
-            return Sha256_16(stdout);
+            // RunAndCaptureText drains stdout and stderr concurrently — no pipe-buffer deadlock.
+            ProcessTextOutput result = Process.RunAndCaptureText(psi, TimeSpan.FromMilliseconds(30_000));
+            if (result.ExitStatus.ExitCode != 0)
+                return $"ERR:{result.ExitStatus.ExitCode}:{Truncate(result.StandardError, 200)}";
+            return Sha256_16(result.StandardOutput);
         }
         catch (Exception ex)
         {
@@ -63,5 +59,4 @@ public static class Monitor
 
     private static string Truncate(string s, int max) => s.Length <= max ? s : s[..max];
 
-    private static string ShellQuote(string s) => $"\"{s.Replace("\"", "\\\"")}\"";
 }

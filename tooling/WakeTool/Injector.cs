@@ -48,60 +48,42 @@ public static class Injector
 
     private static bool TmuxSendKeys(string pane, string text)
     {
-        var escaped = text.Replace("'", "'\\''");
-        var psi = new ProcessStartInfo
+        // ArgumentList passes the text as one argv entry — no shell, no quoting.
+        var psi = new ProcessStartInfo("tmux", ["send-keys", "-t", pane, text, "Enter"])
         {
-            FileName = "tmux",
-            Arguments = $"send-keys -t {pane} '{escaped}' Enter",
             UseShellExecute = false,
             CreateNoWindow = true
         };
-        using var p = Process.Start(psi)!;
-        p.WaitForExit(5_000);
-        return p.ExitCode == 0;
+        ProcessExitStatus status = Process.Run(psi, TimeSpan.FromMilliseconds(5_000));
+        return status.ExitCode == 0;
     }
 
     private static bool ConnectSend(string sessionId, string prompt)
     {
-        var psi = new ProcessStartInfo
+        var psi = new ProcessStartInfo("copilot", ["--connect", sessionId, "-p", prompt])
         {
-            FileName = "copilot",
-            Arguments = $"--connect {sessionId} -p {ShellQuote(prompt)}",
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
-        using var p = Process.Start(psi)!;
-        p.StandardOutput.ReadToEnd();
-        p.StandardError.ReadToEnd();
-        p.WaitForExit(120_000);
-        return p.ExitCode == 0;
+        // RunAndCaptureText drains stdout and stderr concurrently — no pipe-buffer deadlock.
+        ProcessTextOutput result = Process.RunAndCaptureText(psi, TimeSpan.FromMilliseconds(120_000));
+        return result.ExitStatus.ExitCode == 0;
     }
 
     private static bool HerdrSend(string target, string prompt)
     {
-        var psi = new ProcessStartInfo
+        var psi = new ProcessStartInfo("herdr", ["agent", "prompt", target, prompt, "--wait", "--timeout", "120000"])
         {
-            FileName = "herdr",
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
-        // Target and prompt as separate argv; ArgumentList prevents any shell interpretation of the prompt.
-        psi.ArgumentList.Add("agent");
-        psi.ArgumentList.Add("prompt");
-        psi.ArgumentList.Add(target);
-        psi.ArgumentList.Add(prompt);
-        psi.ArgumentList.Add("--wait");
-        psi.ArgumentList.Add("--timeout");
-        psi.ArgumentList.Add("120000");
-        using var p = Process.Start(psi)!;
-        p.StandardOutput.ReadToEnd();
-        p.StandardError.ReadToEnd();
-        p.WaitForExit(130_000);
-        return p.ExitCode == 0;
+        // RunAndCaptureText drains stdout and stderr concurrently — no pipe-buffer deadlock.
+        ProcessTextOutput result = Process.RunAndCaptureText(psi, TimeSpan.FromMilliseconds(130_000));
+        return result.ExitStatus.ExitCode == 0;
     }
 
     private static bool FileWrite(string path, string prompt)
@@ -113,5 +95,4 @@ public static class Injector
         return true;
     }
 
-    private static string ShellQuote(string s) => $"\"{s.Replace("\"", "\\\"")}\"";
 }
