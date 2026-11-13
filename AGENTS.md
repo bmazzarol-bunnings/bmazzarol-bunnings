@@ -96,8 +96,9 @@ works through.
 
   Workers run aigateway/qwen-27b (pi model config); repo `.github/skills` apply
   to them; `gh` authenticates separately, so workers commit, push, and raise PRs
-  normally. Reasoning: default low; raise only for genuinely hard design work or
-  a task that already failed lower — state the reason in the task body.
+  normally. Reasoning: default medium (unbiased level for qwen-27b; low aborts
+  aigateway requests); raise only for genuinely hard design work or a task that
+  already failed lower — state the reason in the task body.
 - Claim/release protocol (issue comments; latest marker wins):
 
   ```

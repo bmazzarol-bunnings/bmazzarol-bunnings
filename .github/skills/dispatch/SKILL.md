@@ -71,8 +71,9 @@ Gotchas:
 * Agent names match `[a-z][a-z0-9_-]{0,31}` and are unique among live agents.
 * `agent start` returns only after pi is detected and ready; `agent_not_ready`
   means startup blocked — read the pane, resolve, wait for idle before prompting.
-* Reasoning: default low; raise only for genuinely hard design work or a prior
-  failure — state the reason in the task body.
+* Reasoning: default medium (unbiased level for qwen-27b; low aborts aigateway
+  requests); raise only for genuinely hard design work or a prior failure —
+  state the reason in the task body.
 
 ### 6. Claim the issue
 

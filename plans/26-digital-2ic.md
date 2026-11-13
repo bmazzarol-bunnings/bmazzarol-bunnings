@@ -52,6 +52,12 @@ Out:
   Herdr mode, cutover runbook below.
 - Hermes and Hindsight retired to reference-only at cutover.
 
+Progress (2026-11-13): infra PR #52 (AGENTS.md, skills, WakeTool baseline) and
+WakeTool PR #53 (Herdr inject mode + task definitions) drafted for review.
+**Finding:** `PI_REASONING_LEVEL=low` aborts aigateway/qwen-27b requests ("Request
+was aborted") — worker default reasoning is **medium** (the unbiased level for
+qwen); low is not usable on this provider/model pair.
+
 ## Evolution log
 
 - 2026-11-04 — Plan doc created from map #26 (bucket standardisation, issue #34).
