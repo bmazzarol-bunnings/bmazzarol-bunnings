@@ -1,0 +1,21 @@
+date: 2026-11-14
+dotnet-sdk: 11.0.100-rc.3.26522.148
+runtime-root: /nix/store/n9qcyaipzjghbv3by0prww4y4yfnlwp1-dotnet-combined/share/dotnet
+runtime: 11.0.0-rc.3.26522.148 (net8 apps)
+common-repo-commit: c758ce6c455d9d9152394adf044f49f0f41bbf86
+hardware: Intel(R) Core(TM) Ultra 7 165H
+cpus: 16
+lscpu-summary:
+CPU(s):                                  16
+Model name:                              Intel(R) Core(TM) Ultra 7 165H
+Thread(s) per core:                      2
+Core(s) per socket:                      8
+Socket(s):                               1
+L3 cache:                                24 MiB (1 instance)
+invocation (per project): dotnet build -c Release; DOTNET_ROOT=<runtime-root> <runtime-root>/dotnet bin/Release/net8.0/<App>.dll --filter '*'
+benchmarkdotnet-job: Medium (15s workload, 60s warmup) — BenchmarkDotNet default
+note: card specified 'dotnet run -c Release'; on this host dotnet run fails (SDK-store runtimes need GLIBC_2.44, system glibc older). Direct dll execution with DOTNET_ROOT pointed at the working nix combined runtime is the exact equivalent; outputs below are unaltered BenchmarkDotNet stdout.
+ai-benchmark-extra:
+  model: ms-marco-TinyBERT-L2.Q8_0.gguf (src/dotnet/Components/AI/Bunnings.Common.AI.TestHelpers/)
+  env: LLAMA_EMBEDDING_MODEL_PATH=<path-to-gguf> (required by BenchmarkTestUtilities.GetModelPath; without it the bench emits NA rows)
+output-trimming: ai-benchmark-output.txt omits repetitive llama.cpp internal log lines (llama_context:/decode:/init:/backend lines); all BenchmarkDotNet report sections, tables, and errors are intact. Full untrimmed stdout existed locally at run time.
