@@ -112,8 +112,10 @@ Preconditions (all checked before starting):
 - Voice round-trip verified locally: `tts.sh "hello world test"` → OGG/Opus,
   `stt.sh` on it → "hello world".
 - BotFather: private-chat Threaded Mode already enabled on the Rivet bot.
-- `~/.config/rivet/telegram-bot-token` present, chmod 600 (existing gateway
-  token — reused, not rotated).
+- `~/.config/rivet/telegram-bot-token` present, chmod 600 — the bot token
+  source of record (reuse the value, do not rotate).
+- No TelegramGateway process is running — it was never used in production;
+  this is a code-only retirement.
 
 ### 1. Config — `~/.pi/agent/telegram.json` (user scope only, chmod 600, never in repo)
 
@@ -146,11 +148,12 @@ Notes on the fields:
 
 - `botToken`: prefer the `$TELEGRAM_BOT_TOKEN` env reference — `/telegram-setup`
   prefills it and persists the reference, not the secret. Fallback: if the
-  herdr pane env has no `TELEGRAM_BOT_TOKEN`, store the existing value from
-  `~/.config/rivet/telegram-bot-token` (chmod 600) directly in the config.
-  The token never goes into this repo, in any file or commit.
-- `allowedUserId`: Ben's numeric Telegram id (reuse the value already in the
-  gateway's `TELEGRAM_ALLOWED_USERS`). Owner pairing still applies on first
+  herdr pane env has no `TELEGRAM_BOT_TOKEN`, store the value from
+  `~/.config/rivet/telegram-bot-token` (chmod 600, token source of record)
+  directly in the config. The token never goes into this repo, in any file or
+  commit.
+- `allowedUserId`: Ben's numeric Telegram id (reuse the `TELEGRAM_ALLOWED_USERS`
+  values). Owner pairing still applies on first
   `/start`.
 - `inboundHandlers` `audio/*` → local STT: transcript text becomes the prompt.
   Audio never leaves the laptop (HF_HUB_OFFLINE=1).
@@ -194,13 +197,16 @@ and never create threads.
 
 ### 4. Decommission (only after every validation pass is green)
 
-1. Stop the TelegramGateway process.
+1. Confirm no TelegramGateway process is running (`pgrep -f TelegramGateway`;
+   it was never used in production — if anything shows up, stop it and check
+   what started it before deleting).
 2. Delete `tooling/TelegramGateway/` and `state/telegram/` (outbox dirs) —
    one PR, after Ben's word.
 3. Update this plan's Current state + AGENTS.md references (gateway →
    pi-telegram; task-alias expansion → prompt templates).
 4. Close #62 (duplicate inbound) as moot — no duplicate inbound paths remain.
 
-Rollback (any point before step 4): `/telegram-disconnect` in 2IC; restart the
-TelegramGateway process. The gateway code stays in git history until its
-deletion PR lands.
+Rollback (any point before step 4): `/telegram-disconnect` in 2IC; pi-telegram
+stops polling and the bot goes quiet. The gateway code stays in git history as
+reference until its deletion PR lands — it is never re-run (it was never used
+as a live process).
