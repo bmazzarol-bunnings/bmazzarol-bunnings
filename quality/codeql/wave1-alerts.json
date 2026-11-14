@@ -1,0 +1,562 @@
+[
+  {
+    "number": 226,
+    "severity": "note",
+    "rule": "cs/linq/missed-where",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Cryptography/Bunnings.Common.Cryptography.OData/SensitiveStringExpressionProviderOptions.cs",
+    "start_line": 33,
+    "message": "This foreach loop implicitly filters its target sequence - consider filtering the sequence explicitly using '.Where(...)'.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 46,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Cryptography/Bunnings.Common.Cryptography/Json/Converters/SensitiveStringConverter.cs",
+    "start_line": 59,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 47,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Cryptography/Bunnings.Common.Cryptography/Json/Converters/SensitiveStringConverter.cs",
+    "start_line": 112,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 41,
+    "severity": "note",
+    "rule": "cs/missed-ternary-operator",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Expression/Bunnings.Common.Expression/Extensions/ExpressionExtensions.cs",
+    "start_line": 39,
+    "message": "Both branches of this 'if' statement write to the same variable - consider using '?' to express intent better.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 547,
+    "severity": "note",
+    "rule": "cs/linq/missed-where",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Http/Bunnings.Common.Http.OData/HttpODataQueryProvider.cs",
+    "start_line": 337,
+    "message": "This foreach loop implicitly filters its target sequence - consider filtering the sequence explicitly using '.Where(...)'.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 542,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Http/Bunnings.Common.Http.OData/HttpODataQueryProvider.cs",
+    "start_line": 481,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 189,
+    "severity": "warning",
+    "rule": "cs/local-not-disposed",
+    "tags": [
+      "correctness",
+      "efficiency",
+      "external/cwe/cwe-404",
+      "external/cwe/cwe-459",
+      "external/cwe/cwe-460",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Http/Bunnings.Common.Http/ServerState.cs",
+    "start_line": 466,
+    "message": "Disposable 'MemoryStream' is created but not disposed.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 174,
+    "severity": "note",
+    "rule": "cs/complex-condition",
+    "tags": [
+      "maintainability",
+      "readability",
+      "testability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Json/Bunnings.Common.Json/Converters/ReflectionHelpers.cs",
+    "start_line": 11,
+    "message": "Complex condition: too many logical operations in this expression.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 626,
+    "severity": "note",
+    "rule": "cs/linq/missed-where",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Json/Bunnings.Common.Json/ProblemContextDictionary.cs",
+    "start_line": 319,
+    "message": "This foreach loop implicitly filters its target sequence - consider filtering the sequence explicitly using '.Where(...)'.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 48,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Primitives/Bunnings.Common.Primitives/ActivatorUtilities.cs",
+    "start_line": 39,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 49,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Primitives/Bunnings.Common.Primitives/ActivatorUtilities.cs",
+    "start_line": 73,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 50,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Foundation/Xml/Bunnings.Common.Xml/Extensions/XmlExtensions.cs",
+    "start_line": 166,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 227,
+    "severity": "note",
+    "rule": "cs/linq/missed-where",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines.Benchmarks/Cases/CountFileCase/CountFileCase.Baseline.cs",
+    "start_line": 19,
+    "message": "This foreach loop implicitly filters its target sequence - consider filtering the sequence explicitly using '.Where(...)'.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 55,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/Combinators/PipelineBuilder.CombinedConsumers.cs",
+    "start_line": 97,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 56,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/Impl/PipelineBuilder.PipelineImpl.cs",
+    "start_line": 203,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 44,
+    "severity": "note",
+    "rule": "cs/missed-ternary-operator",
+    "tags": [
+      "language-features",
+      "maintainability",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/PipelineBuilder.cs",
+    "start_line": 94,
+    "message": "Both branches of this 'if' statement write to the same variable - consider using '?' to express intent better.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 57,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/Wrappers/PipelineBuilder.ConsumerWithIdentity.cs",
+    "start_line": 84,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 58,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/Wrappers/PipelineBuilder.ProducerWithIdentity.cs",
+    "start_line": 87,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 59,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Builder/Wrappers/PipelineBuilder.StageWithIdentity.cs",
+    "start_line": 100,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 129,
+    "severity": "note",
+    "rule": "cs/static-field-written-by-instance",
+    "tags": [
+      "maintainability",
+      "modularity",
+      "quality"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Executors/BaseExecutor.cs",
+    "start_line": 60,
+    "message": "Write to static field from instance method, property, or constructor.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 130,
+    "severity": "note",
+    "rule": "cs/static-field-written-by-instance",
+    "tags": [
+      "maintainability",
+      "modularity",
+      "quality"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Executors/BaseExecutor.cs",
+    "start_line": 74,
+    "message": "Write to static field from instance method, property, or constructor.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 60,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Instrumentation/Logging/LoggingInstrument.cs",
+    "start_line": 66,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 23,
+    "severity": "warning",
+    "rule": "cs/dereferenced-value-may-be-null",
+    "tags": [
+      "correctness",
+      "exceptions",
+      "external/cwe/cwe-476",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Instrumentation/Telemetry/TelemetryInstrument.cs",
+    "start_line": 106,
+    "message": "Variable activity may be null at this access as suggested by this null check.\nVariable activity may be null at this access as suggested by this null check.\nVariable activity may be null at this access as suggested by this null check.\nVariable activity may be null at this access as suggested by this null check.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 370,
+    "severity": "warning",
+    "rule": "cs/dereferenced-value-may-be-null",
+    "tags": [
+      "correctness",
+      "exceptions",
+      "external/cwe/cwe-476",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Instrumentation/Telemetry/TelemetryInstrument.cs",
+    "start_line": 539,
+    "message": "Variable context.Handle.Activity may be null at this access because of this assignment.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 61,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/FanOut/Pipeline.FanOutStage.cs",
+    "start_line": 87,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 62,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/FanOut/Pipeline.FanOutWithContextStage.cs",
+    "start_line": 101,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 770,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/Scoped/ScopedStage.cs",
+    "start_line": 80,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 63,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/Split/Pipeline.PipelineStage.cs",
+    "start_line": 101,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 64,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/Split/Pipeline.SplitStage.cs",
+    "start_line": 89,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 65,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Operations/Split/Pipeline.SplitWithContextStage.cs",
+    "start_line": 91,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 66,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Producers/Enumerator/IEnumeratorProducer.cs",
+    "start_line": 51,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 67,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Producers/Enumerator/ISyncEnumeratorProducer.cs",
+    "start_line": 49,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 201,
+    "severity": "warning",
+    "rule": "cs/local-not-disposed",
+    "tags": [
+      "correctness",
+      "efficiency",
+      "external/cwe/cwe-404",
+      "external/cwe/cwe-459",
+      "external/cwe/cwe-460",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Resources/ResourcesImpl.cs",
+    "start_line": 336,
+    "message": "Disposable 'SemaphoreSlim' is created but not disposed.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 68,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Resources/ResourcesImpl.cs",
+    "start_line": 413,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 772,
+    "severity": "note",
+    "rule": "cs/catch-of-all-exceptions",
+    "tags": [
+      "error-handling",
+      "external/cwe/cwe-396",
+      "quality",
+      "reliability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/Bunnings.Common.Pipelines/Resources/ResourcesImpl.cs",
+    "start_line": 483,
+    "message": "Generic catch clause.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 762,
+    "severity": "note",
+    "rule": "cs/class-name-matches-base-class",
+    "tags": [
+      "maintainability",
+      "naming",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/HostedJob/Database/Bunnings.Common.Pipelines.HostedJob.Database/IStateWithDatabase.cs",
+    "start_line": 16,
+    "message": "Class has the same name as its base class.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  },
+  {
+    "number": 765,
+    "severity": "note",
+    "rule": "cs/class-name-matches-base-class",
+    "tags": [
+      "maintainability",
+      "naming",
+      "quality",
+      "readability"
+    ],
+    "path": "src/dotnet/Components/Pipelines/HostedJob/Database/Bunnings.Common.Pipelines.HostedJob.Database/IStateWithDatabaseTransaction.cs",
+    "start_line": 15,
+    "message": "Class has the same name as its base class.",
+    "commit": "25b8b8d53e6b72950833c45d16e1085cd9f8cdcf"
+  }
+]

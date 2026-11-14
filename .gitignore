@@ -1,0 +1,7 @@
+# Regenerable hunt artifacts (rebuild: tooling/quality-hunt/hunt.sh)
+quality/duckdb/
+# CodeQL raw alert dump is regenerable; keep the wave-filtered file tracked
+quality/codeql/codeql-alerts-open.json
+# hunt-results/ stays tracked: it is the pool's evidence and the wave-diff base
+# raw dump: regenerate with tooling/quality-hunt/codeql-harvest.sh
+quality/codeql/codeql-alerts-open-raw.json
