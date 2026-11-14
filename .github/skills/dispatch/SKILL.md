@@ -61,8 +61,16 @@ no-merge gate. Write it as if Ben is the reader.
 ```bash
 herdr pane split --current --direction right --cwd <worktree> --no-focus
 herdr agent start worker-N --kind pi --pane <returned-pane-id>
+herdr agent prompt worker-N "/telegram-connect" --wait --timeout 120000
 herdr agent prompt worker-N "<task body>" --wait --timeout 3600000
 ```
+
+The `/telegram-connect` step is best-effort (Threaded Mode: gives the worker
+its own Telegram thread). It runs after the session is live and before the
+task body; a failure here must NEVER block dispatch — record
+`telegram_connect: failed` in the worker's `state/inflight/<issue>.json` note
+and proceed with the task body. The worker reaches the phone thread as soon
+as it retries or the session is resumed.
 
 Gotchas:
 
@@ -99,6 +107,8 @@ session and a claim comment.
   the dialog — never guess an approval.
 * `agent prompt` returns `agent_prompt_stalled` or `timeout`: read the pane tail
   (`herdr agent read worker-N`); if no activity, close the pane, re-dispatch.
+* `/telegram-connect` times out or errors: note `telegram_connect: failed` in
+  the worker's inflight file and continue dispatch — never re-dispatch over it.
 * Pre-flight finds a live claim: stop, report who owns it, do not dispatch.
 * Worktree add fails (branch exists): the card was dispatched before — run orphan
   recovery in claim-protocol.md.
@@ -110,3 +120,6 @@ session and a claim comment.
 * Small mid-flight changes: relay one message into the pane (`herdr agent
   prompt`) or queue them for the review-feedback loop — do not re-dispatch for
   small deltas.
+* Worker Telegram threads (Threaded Mode): keep the thread on handback for
+  post-handback follow-ups; threads are auto-cleaned when the pi session is
+  deleted. Never close a worker's thread while the session is live.
