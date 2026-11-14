@@ -1,0 +1,5 @@
+{
+  "packages": [
+    "npm:@llblab/pi-telegram@0.59.1"
+  ]
+}

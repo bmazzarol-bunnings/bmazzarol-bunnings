@@ -97,3 +97,110 @@ qwen); low is not usable on this provider/model pair.
   The vision (one captain, one interface; scripts own mechanics, agents own
   judgment; restart is a non-event) carries over unchanged — only the substrate
   changes.
+
+## Telegram cutover runbook (pi-telegram, #64)
+
+Retire the .NET TelegramGateway (text-only) for the `@llblab/pi-telegram` pi
+extension at project scope, Threaded Mode: General = 2IC (leader), one thread
+per worker session (followers). Voice runs on-device: faster-whisper STT
+(offline-forced) + edge-tts TTS (keyless) via committed wrappers.
+
+Preconditions (all checked before starting):
+
+- #64 merged: `.pi/` project install of `@llblab/pi-telegram@0.59.1`,
+  `.pi/prompts/` symlinks, `tooling/voice/` wrappers committed.
+- Voice round-trip verified locally: `tts.sh "hello world test"` → OGG/Opus,
+  `stt.sh` on it → "hello world".
+- BotFather: private-chat Threaded Mode already enabled on the Rivet bot.
+- `~/.config/rivet/telegram-bot-token` present, chmod 600 (existing gateway
+  token — reused, not rotated).
+
+### 1. Config — `~/.pi/agent/telegram.json` (user scope only, chmod 600, never in repo)
+
+```json
+{
+  "profiles": {
+    "default": {
+      "botToken": "$TELEGRAM_BOT_TOKEN",
+      "allowedUserId": 123456789
+    }
+  },
+  "inboundHandlers": [
+    {
+      "mime": "audio/*",
+      "template": ["/home/bmazzarol/work/bmazzarol-bunnings/tooling/voice/stt.sh", "--file={file}"]
+    }
+  ],
+  "outboundHandlers": [
+    {
+      "type": "voice",
+      "template": ["/home/bmazzarol/work/bmazzarol-bunnings/tooling/voice/tts.sh", "-", "{ogg}"],
+      "output": "ogg"
+    }
+  ],
+  "voice": { "replyMode": "mirror" }
+}
+```
+
+Notes on the fields:
+
+- `botToken`: prefer the `$TELEGRAM_BOT_TOKEN` env reference — `/telegram-setup`
+  prefills it and persists the reference, not the secret. Fallback: if the
+  herdr pane env has no `TELEGRAM_BOT_TOKEN`, store the existing value from
+  `~/.config/rivet/telegram-bot-token` (chmod 600) directly in the config.
+  The token never goes into this repo, in any file or commit.
+- `allowedUserId`: Ben's numeric Telegram id (reuse the value already in the
+  gateway's `TELEGRAM_ALLOWED_USERS`). Owner pairing still applies on first
+  `/start`.
+- `inboundHandlers` `audio/*` → local STT: transcript text becomes the prompt.
+  Audio never leaves the laptop (HF_HUB_OFFLINE=1).
+- `outboundHandlers` voice: text arrives on stdin, `{ogg}` is the output path
+  (OGG/Opus is the sendVoice requirement). edge-tts sends reply text to
+  Microsoft's endpoint — accepted trade for keyless TTS; swap to a local TTS
+  later via the same handler template if needed.
+- `voice.replyMode: mirror`: voice in → voice out; text turns stay text.
+- Paths point at the main checkout (not a worktree) so the config survives
+  worktree churn.
+
+### 2. Connect + pair (in the pinned 2IC session)
+
+1. 2IC: `/telegram-setup` — paste the bot token (or confirm the pre-filled
+   `$TELEGRAM_BOT_TOKEN` env reference). Verifies the token, saves config.
+2. 2IC: `/telegram-connect` — this pi instance becomes the leader and owns
+   bot polling.
+3. Ben's phone: DM the Rivet bot and send `/start` — first successful `/start`
+   pairs the owner.
+4. 2IC: `/telegram-status` — leader, polling healthy, owner paired.
+
+Workers: the dispatch envelope now runs `herdr agent prompt worker-N
+/telegram-connect` (best-effort) after session start — the worker becomes a
+follower with its own thread. Subagent one-shots (`pi --print`) never connect
+and never create threads.
+
+### 3. Validation passes (worker drives, Ben's phone verifies)
+
+1. **Text round-trip (General):** phone DM → 2IC; streamed reply lands back.
+2. **Prompt template:** send a task name (e.g. `/heartbeat`) → the task file
+   content is injected (parity with the old alias expansion).
+3. **Voice:** voice note in → transcript reaches 2IC; 2IC voice reply delivers
+   as a native OGG/Opus voice note.
+4. **Media:** inbound image inspectable by 2IC; 2IC artifact sent as a file.
+5. **Worker thread:** dispatch a real worker → its thread appears; a phone
+   message in that thread reaches the worker; handback posts to the thread;
+   thread persists after handback (cleanup only on session delete).
+6. **Restart pass:** restart the 2IC session → leadership/ownership preserved,
+   reconnect works (`/telegram-connect` again if needed); resume a worker
+   session → its thread restored.
+
+### 4. Decommission (only after every validation pass is green)
+
+1. Stop the TelegramGateway process.
+2. Delete `tooling/TelegramGateway/` and `state/telegram/` (outbox dirs) —
+   one PR, after Ben's word.
+3. Update this plan's Current state + AGENTS.md references (gateway →
+   pi-telegram; task-alias expansion → prompt templates).
+4. Close #62 (duplicate inbound) as moot — no duplicate inbound paths remain.
+
+Rollback (any point before step 4): `/telegram-disconnect` in 2IC; restart the
+TelegramGateway process. The gateway code stays in git history until its
+deletion PR lands.
