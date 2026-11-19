@@ -60,7 +60,7 @@ no-merge gate. Write it as if Ben is the reader.
 
 ```bash
 herdr pane split --current --direction right --cwd <worktree> --no-focus
-herdr agent start worker-N --kind pi --pane <returned-pane-id>
+herdr agent start worker-N --kind pi --pane <returned-pane-id> -- --approve
 herdr agent prompt worker-N "/telegram-connect" --wait --timeout 120000
 herdr agent prompt worker-N "<task body>" --wait --timeout 3600000
 ```
@@ -79,6 +79,11 @@ Gotchas:
 * Agent names match `[a-z][a-z0-9_-]{0,31}` and are unique among live agents.
 * `agent start` returns only after pi is detected and ready; `agent_not_ready`
   means startup blocked — read the pane, resolve, wait for idle before prompting.
+* `-- --approve` is mandatory: every fresh worktree is an untrusted cwd, so pi
+  shows a "Do you trust this folder?" dialog at startup. Without it the first
+  `agent prompt` lands in the dialog, not the prompt box (observed as lost
+  submits / `agent_prompt_stalled`). `--approve` is per-run trust for that
+  launch; it does not modify `~/.pi/agent/trust.json`.
 * Reasoning: default medium (unbiased level for qwen-27b; low aborts aigateway
   requests); raise only for genuinely hard design work or a prior failure —
   state the reason in the task body.

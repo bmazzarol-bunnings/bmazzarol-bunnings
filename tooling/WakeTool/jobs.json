@@ -1,7 +1,7 @@
 [
   {
     "name": "2ic-heartbeat",
-    "schedule": "*/5 * * * *",
+    "schedule": "*/30 * * * *",
     "monitorCommand": "cd /home/bmazzarol/work/bmazzarol-bunnings && gh pr list --json number,state,reviewDecision 2>/dev/null; for f in state/floor/worker-*.json; do [ -f \"$f\" ] && cat \"$f\"; done; for f in state/inflight/*.json; do [ -f \"$f\" ] && cat \"$f\"; done; herdr agent list 2>/dev/null || echo floor-down",
     "tickPrompt": "[HEARTBEAT] Fallback prompt (task file missing). Run the supervise skill tick; if nothing changed since last tick, reply [SILENT].",
     "task": "heartbeat",
