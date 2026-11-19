@@ -32,16 +32,9 @@ High-level durable reference. The contents of `work/` change as projects come an
 | **Data / other orgs** | `edp-dbt` (Bunnings-Data-and-Analytics) |
 | **Personal / scratch** | `workato-labs`, `frontend-design-assistant` (assistant — see ASSISTANTS.md), `llm-box-config`, `pi` (bmazzarol-bunnings org) |
 
-### Worktrees currently attached (2026-11-19)
+### Worktrees
 
-| Worktree | Repo | Branch / status |
-|---|---|---|
-| `item-worktrees/item-enriched-read-cosmos` | item | `enriched-read-cosmos` — PR #133 in review |
-| `bunnings-agentic-otel-harness` / `-otel-python` | bunnings-agentic | `otel/harness-logging` / `otel/python-logging` |
-| `dotnet.common-74` | dotnet.common | `worker/74-q1-fix` (stale — merged, delete candidate) |
-| `dotnet.common-1787` | dotnet.common | `bmazzarol-bunnings/dotnet.common/1787` (2 unpushed commits — Ben's call) |
-| `bmazzarol-bunnings-51/-62/-64` | bmazzarol-bunnings | old worker branches (stale — delete candidates) |
-| `wt-caf-sweep` | bmazzarol-bunnings | `caf-sweep-map` (scratch) |
+None attached (2026-11-19 sweep — all removed; branches preserved where work is live: `enriched-read-cosmos` (item, PR #133 in review), `otel/harness-logging` + `otel/python-logging` (bunnings-agentic), `fix/docs-skills-card-toc-chevron` (dotnet.common, checked out in the main clone). Stale worker branches deleted: worker/56-cronos, worker/62-tg-offset, worker/64-pi-telegram, caf-sweep-map, worker/74-q1-fix, 1787.)
 
 Repos sitting on non-main branches (work in flight or stale — check before assuming main): `GHA.API.Templates` (fix/mtp-trx), `agentic-kb-template` (feat/llm-wiki), `azure-cosmos-dotnet-v3` (users/…/fix-orderbyrank), `checkout.api` / `payment.api` / `dataplatform.vertex.ai` (upgrade/bunnings-common-*), `edp-dbt` (tokyo/…), `iop-standards` (rfc/0006), `ipt-standards` (fix/duplicate-home-nav), `supplier` (fix/search-cosmos-materialization), `dotnet.common` (fix/docs-skills-card-toc-chevron).
 
