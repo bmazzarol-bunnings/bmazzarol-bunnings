@@ -18,6 +18,7 @@ High-level durable reference. The contents of `work/` change as projects come an
 - `/home/bmazzarol/work/` — all development repos live here; the set of repos changes over time. Domain repos (item, dotnet.common, supplier, checkout, ...) are company repos under the `Bunnings-Technology-Delivery` GitHub org.
 - Worktree convention: `<repo>-<issue-or-slug>` next to the main checkout, or `<repo>-worktrees/<slug>` for multi-worktree repos (item uses `item-worktrees/`). Workers get a fresh worktree per dispatch; merged worktrees get removed.
 - Company repos: draft PRs from workers, Ben merges (hard gate). 2IC workboard = issues on `bmazzarol-bunnings/bmazzarol-bunnings` (labels: `delivery:task`, `tech-review:approved`, `delivery:hitl`).
+- **dotnet.common changelog policy** (Ben, 2026-11-20): `Changes/` entries are added ONLY when there is something a developer needs to know (API/behaviour change, migration, security fix visible to consumers). Internal-only fixes, suppressions, refactors with identical behaviour: no entry — the change-log CI gate failing is expected and merged past.
 
 ### Repo inventory (snapshot 2026-11-19 — re-sweep, it moves)
 

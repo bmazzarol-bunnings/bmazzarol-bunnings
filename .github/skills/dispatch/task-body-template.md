@@ -47,6 +47,7 @@ Rules for writing it:
   bottom.
 * Every gate names the exact command and what "pass" means.
 * Constraints echo the tech review's decisions so the worker can't drift from them.
+* Changelog rule (dotnet.common and similar): a `Changes/` entry is added ONLY when there is something a developer needs to know (API/behaviour change, migration, consumer-visible security fix). Internal-only fixes, suppressions, and identical-behaviour refactors get no entry — tell the worker the change-log CI gate may fail on that and the captain merges past it.
 * The blocker path is always present — a worker that stalls silently is a
   supervision failure.
 * Include a WAIT RULE when the task involves background jobs (builds, benches):
